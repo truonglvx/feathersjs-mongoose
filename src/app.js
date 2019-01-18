@@ -20,6 +20,10 @@ const mongoose = require('./mongoose');
 
 const app = express(feathers());
 
+const rest = require('feathers-rest');
+const bodyParser = require('body-parser');
+const swagger = require('feathers-swagger');
+
 // Load app configuration
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing
@@ -29,6 +33,18 @@ app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+
+// Swagger
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.configure(rest());
+app.configure(swagger({
+  docsPath: '/docs',
+  info: {
+    title: 'A test',
+    description: 'A description'
+  }
+}));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 

@@ -1,0 +1,17 @@
+// posts-model.js - A mongoose model
+// 
+// See http://mongoosejs.com/docs/models.html
+// for more of what you can do here.
+module.exports = function (app) {
+  const mongooseClient = app.get('mongooseClient');
+  const { Schema } = mongooseClient;
+  const posts = new Schema({
+    author: { type: Schema.Types.ObjectId, ref: 'users', required: true }, 
+    title: { type: String, required: true },
+    body: { type: String, required: true }
+  }, {
+    timestamps: true
+  });
+
+  return mongooseClient.model('posts', posts);
+};

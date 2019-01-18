@@ -3,6 +3,10 @@ const createService = require('feathers-mongoose');
 const createModel = require('../../models/users.model');
 const hooks = require('./users.hooks');
 
+const errors = require('@feathersjs/errors');
+
+const notFound = new errors.NotFound('User does not exist');
+
 module.exports = function (app) {
   const Model = createModel(app);
   const paginate = app.get('paginate');
@@ -19,4 +23,19 @@ module.exports = function (app) {
   const service = app.service('users');
 
   service.hooks(hooks);
+
+  // Initialize our service with any options it requires
+  app.use('/me', {
+    async find(params) {
+      const userId = params.user && params.user._id;
+      const users = await Model.findById(userId);
+      if(users){
+        return users;
+      }else{
+        return notFound;
+      }
+    }
+  });
+  const meService = app.service('me');
+  meService.hooks(hooks);
 };

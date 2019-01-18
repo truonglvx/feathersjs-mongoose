@@ -20,7 +20,6 @@ const mongoose = require('./mongoose');
 
 const app = express(feathers());
 
-const rest = require('feathers-rest');
 const bodyParser = require('body-parser');
 const swagger = require('feathers-swagger');
 
@@ -37,13 +36,13 @@ app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Swagger
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.configure(rest());
 app.configure(swagger({
   docsPath: '/docs',
+  uiIndex: true, //path.join(__dirname, 'docs.html'),
   info: {
-    title: 'A test',
-    description: 'A description'
-  }
+    title: 'feathersjs-server docs',
+    description: 'feathersjs-server api'
+  },
 }));
 // Host the public folder
 app.use('/', express.static(app.get('public')));

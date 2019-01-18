@@ -30,6 +30,8 @@
     "mocha": "mocha test/ --recursive --exit"
   },
   "dependencies": {
+    "@casl/ability": "^2.5.1",
+    "@casl/mongoose": "^2.3.0",
     "@feathersjs/authentication": "^2.1.15",
     "@feathersjs/authentication-jwt": "^2.0.9",
     "@feathersjs/authentication-local": "^1.2.9",
@@ -40,6 +42,7 @@
     "@feathersjs/feathers": "^3.3.1",
     "@feathersjs/socketio": "^3.2.8",
     "body-parser": "^1.18.3",
+    "casl": "^1.1.0",
     "compression": "^1.7.3",
     "cors": "^2.8.5",
     "feathers-mongoose": "^7.1.3",

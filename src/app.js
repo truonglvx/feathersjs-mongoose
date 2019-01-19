@@ -32,12 +32,10 @@ app.use(helmet());
 app.use(cors());
 app.use(compress());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 
 // Swagger
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.configure(swagger({
   docsPath: '/docs',
   uiIndex: true, //path.join(__dirname, 'docs.html'),

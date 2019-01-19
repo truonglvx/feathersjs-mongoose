@@ -19,18 +19,14 @@ function defineAbilitiesFor(user) {
   const { rules, can } = AbilityBuilder.extract();
 
   can('create',['users']);
-  can('read', ['posts', 'comments']);
+  can(['read'], 'posts');
 
   if (user) {
-    can('manage', ['posts', 'comments'], { author: user._id });
-    can(['read', 'update'], 'users', { _id: user._id });
-    can('create',['users','posts']);
+    can('create',['posts', 'uploads']);
     can(['read'], 'me', { _id: user._id });
+    can(['update', 'delete'], 'posts', { author: user._id });
+    
   }
-
-  // if (process.env.NODE_ENV !== 'production') {
-  //   can('create', ['users']);
-  // }
 
   return new Ability(rules, { subjectName });
 }
@@ -64,12 +60,7 @@ module.exports = function authorize(name = null) {
       if (canReadQuery(query)) {
         Object.assign(hook.params.query, query);
       } else {
-        // The only issue with this is that user will see total amount of records in db
-        // for the resources which he shouldn't know.
-        // Alternative solution is to assign `__nonExistingField` property to query
-        // but then feathers-mongoose will send a query to MongoDB which for sure will return empty result
-        // and may be quite slow for big datasets
-        hook.params.query.$limit = 0;
+        throw new Forbidden(`You are not allowed to ${action} ${serviceName}`);
       }
 
       return hook;

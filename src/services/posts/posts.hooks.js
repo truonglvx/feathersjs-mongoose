@@ -1,10 +1,9 @@
-const { authenticate } = require('@feathersjs/authentication').hooks;
 const validate = require('../../utils/joi.util');
 const postsValidator = require('../../validators/posts.validator');
 
 module.exports = {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [],
     find: [],
     get: [],
     create: [validate.form(postsValidator.withRequired, validate.options) ],

@@ -1,5 +1,6 @@
 {
   "host": "localhost",
+  "serverUrl": "https://feathersjs-mongoose.herokuapp.com",
   "port": 3030,
   "public": "../public/",
   "paginate": {
@@ -79,5 +80,10 @@
       "httpOnly": false,
       "secure": false
     }
+  },
+  "s3": {
+    "bucket" : "feathersjs-test",
+    "accessKeyId": "AKIAIC6GATJIV2P4W5SA",
+    "secretAccessKey": "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"
   }
 }

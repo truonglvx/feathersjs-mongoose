@@ -22,7 +22,7 @@ function defineAbilitiesFor(user) {
   can(['read'], 'posts');
 
   if (user) {
-    can('create',['posts', 'uploads']);
+    can('create',['posts', 'uploads-static','uploads', 'files']);
     can(['read'], 'me', { _id: user._id });
     can(['update', 'delete'], 'posts', { author: user._id });
     

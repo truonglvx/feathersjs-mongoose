@@ -32,6 +32,7 @@ app.use(helmet());
 app.use(cors());
 app.use(compress());
 app.use(express.json());
+app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({limit: '10mb', extended: true }));
 app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 

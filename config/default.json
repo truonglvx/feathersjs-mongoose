@@ -85,5 +85,9 @@
     "bucket" : "feathersjs-test",
     "accessKeyId": "AKIAIC6GATJIV2P4W5SA",
     "secretAccessKey": "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"
+  },
+  "mailgun": {
+    "apiKey": "key-XXXX",
+    "domain": "XXX.com"
   }
 }

@@ -2,6 +2,12 @@
   "host": "localhost",
   "serverUrl": "https://feathersjs-mongoose.herokuapp.com",
   "port": 3030,
+  "protocol": "http",
+  "verifyEmail": {
+    "fromEmail": "yourCompanyEmail@gmail.com",
+    "helpEmail": "yourCompanyHelpEmail@gmail.com"
+  },
+  "src": "../src/",
   "public": "../public/",
   "paginate": {
     "default": 10,

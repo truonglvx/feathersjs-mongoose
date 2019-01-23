@@ -4,6 +4,7 @@
   "port": 3030,
   "protocol": "http",
   "verifyEmail": {
+    "enabled": true,
     "fromEmail": "yourCompanyEmail@gmail.com",
     "helpEmail": "yourCompanyHelpEmail@gmail.com"
   },

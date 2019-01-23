@@ -18,8 +18,8 @@ function subjectName(subject) {
 function defineAbilitiesFor(user) {
   const { rules, can } = AbilityBuilder.extract();
 
-  can('create',['users']);
-  can(['read'], 'posts');
+  can('create',['users', 'authManagement']);
+  can('read', ['posts']);
 
   if (user) {
     can('create',['posts', 'uploads-static','uploads', 'files']);

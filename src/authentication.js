@@ -6,9 +6,13 @@ const Auth0Strategy = require('passport-auth0');
 const GoogleStrategy = require('passport-google-oauth20');
 const FacebookStrategy = require('passport-facebook');
 const GithubStrategy = require('passport-github');
+// const verifyHooks = require('feathers-authentication-management').hooks;
+const verifyHooks = require('feathers-authentication-management').hooks;
+const { debug } = require('feathers-hooks-common');
 
 module.exports = function (app) {
   const config = app.get('authentication');
+  const applyIsVerifiedEmail = app.get('verifyEmail').enabled;
 
   // Set up authentication with the secret
   app.configure(authentication(config));
@@ -41,7 +45,8 @@ module.exports = function (app) {
   app.service('authentication').hooks({
     before: {
       create: [
-        authentication.hooks.authenticate(config.strategies)
+        authentication.hooks.authenticate(config.strategies),
+        applyIsVerifiedEmail ? verifyHooks.isVerified() : debug('Allow unVerify email to login')
       ],
       remove: [
         authentication.hooks.authenticate('jwt')

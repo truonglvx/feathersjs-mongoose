@@ -11,7 +11,13 @@ module.exports = function(app) {
       auth0Id: { type: String },
       googleId: { type: String },
       facebookId: { type: String },
-      githubId: { type: String }
+      githubId: { type: String },
+      isVerified: { type: Boolean },
+      verifyToken: { type: String },
+      verifyExpires: { type: Date },
+      verifyChanges: { type: Object },
+      resetToken: { type: String },
+      resetExpires: { type: Date }
     },
     { timestamps: true }
   );

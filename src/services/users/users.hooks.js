@@ -1,4 +1,7 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
+const verifyHooks = require('feathers-authentication-management').hooks;
+const accountService = require('../authmanagement/notifier');
+const commonHooks = require('feathers-hooks-common');
 
 const {
   hashPassword, protect
@@ -9,7 +12,7 @@ module.exports = {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
-    create: [ hashPassword() ],
+    create: [ hashPassword(), verifyHooks.addVerification() ],
     update: [ hashPassword(),  authenticate('jwt') ],
     patch: [ hashPassword(),  authenticate('jwt') ],
     remove: [ authenticate('jwt') ]
@@ -19,13 +22,37 @@ module.exports = {
     all: [ 
       // Make sure the password field is never sent to the client
       // Always must be the last hook
-      protect('password')
+      protect('password'),
     ],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
+    create: [
+      context => {
+        accountService(context.app).notifier('resendVerifySignup', context.result);
+      },
+      verifyHooks.removeVerification()
+    ],
+    update: [
+      commonHooks.disallow('external')
+    ],
+    patch: [
+      commonHooks.iff(
+        commonHooks.isProvider('external'),
+        commonHooks.preventChanges(true, 
+          ...['email',
+            'isVerified',
+            'verifyToken',
+            'verifyShortToken',
+            'verifyExpires',
+            'verifyChanges',
+            'resetToken',
+            'resetShortToken',
+            'resetExpires']
+        ),
+        hashPassword(),
+        authenticate('jwt')
+      )
+    ],
     remove: []
   },
 

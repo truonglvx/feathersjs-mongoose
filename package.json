@@ -47,6 +47,7 @@
     "compression": "^1.7.3",
     "cors": "^2.8.5",
     "dauria": "^2.0.0",
+    "feathers-authentication-management": "^2.0.1",
     "feathers-blob": "^2.0.1",
     "feathers-hooks-common": "^4.20.2",
     "feathers-mailer": "^3.0.1",
@@ -66,6 +67,7 @@
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
     "passport-google-oauth20": "^1.0.0",
+    "pug": "^2.0.3",
     "s3-blob-store": "^3.2.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.1.0"

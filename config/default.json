@@ -95,6 +95,11 @@
   },
   "mailgun": {
     "apiKey": "key-XXXX",
-    "domain": "XXX.com"
+    "domain": "info.XXXX.co.il"
+  },
+  "twilio": {
+    "sid": "XXXXX",
+    "token": "XXX",
+    "number": "XXX"
   }
 }

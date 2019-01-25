@@ -12,9 +12,12 @@ module.exports = {
     all: [],
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
-    create: [ hashPassword(), verifyHooks.addVerification() ],
-    update: [ hashPassword(),  authenticate('jwt') ],
-    patch: [ hashPassword(),  authenticate('jwt') ],
+    create: [ 
+      hashPassword(),
+      verifyHooks.addVerification(),
+    ],
+    update: [ authenticate('jwt') ],
+    patch: [ authenticate('jwt') ],
     remove: [ authenticate('jwt') ]
   },
 

@@ -94,12 +94,12 @@
     "secretAccessKey": "pFJgQAdtFegyjSNv8zBYsDzB1TgkpKLFdrjUYfFE"
   },
   "mailgun": {
-    "apiKey": "key-XXXX",
-    "domain": "info.XXXX.co.il"
+    "apiKey": "key-41356e8f94a1916bc5dd691e914415b4",
+    "domain": "info.kanmashvim.co.il"
   },
   "twilio": {
-    "sid": "XXXXX",
-    "token": "XXX",
-    "number": "XXX"
+    "sid": "AC202e574dc90c8584da7fef8362052f68",
+    "token": "541ccc9068f3bcd53cce3d3c5a29287c",
+    "number": "+12674158947"
   }
 }

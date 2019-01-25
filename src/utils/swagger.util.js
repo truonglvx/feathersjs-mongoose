@@ -1,6 +1,6 @@
 const m2s = require('mongoose-to-swagger');
 
-module.exports = function(Model) {
+module.exports = function(Model, example = {}) {
   const regularSwaggerModel = m2s(Model);
   const parameters = {
     name: 'body',
@@ -17,7 +17,7 @@ module.exports = function(Model) {
     const item = regularSwaggerModel.properties[key];
     parameters.schema.properties[key] = {
       type: item.type,
-      example: item.type,
+      example: example[key] || item.type,
       properties: item.properties
     };
   });

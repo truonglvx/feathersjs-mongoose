@@ -6,6 +6,7 @@ const getJoiObject = function(withRequired){
     author: Joi.string().meta({ type: 'ObjectId', ref: 'users' }),
     title: Joi.string()[required](),
     body: Joi.string()[required](),
+    rating: Joi.number(),
   };
 };
 

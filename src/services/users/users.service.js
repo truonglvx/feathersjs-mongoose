@@ -13,9 +13,13 @@ module.exports = function (app) {
 
   const options = {
     Model,
-    paginate
+    paginate,
+    filters: {$populate (value) {
+      const populate = [{path: 'roles', select: ['actions', 'subject', 'conditions', 'fields']}];
+      if(value) return populate.push(value);
+      return populate;
+    }}
   };
-
   // Initialize our service with any options it requires
   app.use('/users', createService(options));
 
@@ -28,13 +32,23 @@ module.exports = function (app) {
   app.use('/me', {
     async find(params) {
       const userId = params.user && params.user._id;
-      const users = await Model.findById(userId);
+      const users = await Model.findById(userId).populate('roles');
       if(users){
         return users;
       }else{
         return notFound;
       }
-    }
+    },
+    // async update(id, data) {
+    //   const users = await Model.findOneAndUpdate({_id: id}, data);
+    //   console.log(132)
+    //   if(users){
+    //     return users;
+    //   }else{
+    //     return notFound;
+    //   }
+    // },
+
   });
   const meService = app.service('me');
   meService.hooks(hooks);

@@ -43,7 +43,7 @@ app.configure(swagger({
   info: {
     title: 'feathersjs-server docs',
     description: 'feathersjs-server api'
-  },
+  }   
 }));
 // Host the public folder
 app.use('/', express.static(app.get('public')));

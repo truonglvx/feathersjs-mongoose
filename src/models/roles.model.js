@@ -10,10 +10,11 @@ module.exports = function (app) {
     subject: {
       type: String
     },
+    fields: [],
     conditions: {
       type: Object
     },
-
+    description: String
   }, {
     timestamps: true
   });
@@ -25,6 +26,7 @@ module.exports = function (app) {
 {
   "actions": ["create", "read", "update", "delete"],
   "subject": "Post",
+  'fields': ['_id', {'title': {'author': '${user.id}'}}],
   "conditions": {
     "author": "${user.id}"
   }

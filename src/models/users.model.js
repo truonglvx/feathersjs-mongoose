@@ -17,7 +17,8 @@ module.exports = function(app) {
       verifyExpires: { type: Date },
       verifyChanges: { type: Object },
       resetToken: { type: String },
-      resetExpires: { type: Date }
+      resetExpires: { type: Date },
+      roles: [{ type: mongooseClient.Schema.Types.ObjectId, ref: 'roles' }]
     },
     { timestamps: true }
   );

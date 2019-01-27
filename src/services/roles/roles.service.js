@@ -16,10 +16,12 @@ module.exports = function (app) {
   // Initialize our service with any options it requires
   const rolesService = createService(options);
   rolesService.docs = modelToSwagger(Model, {
-    'actions': ['create', 'read', 'update', 'delete'],
-    'subject': 'Post',
+    'description': 'user can update post except the rating field',
+    'actions': ['update','create'],
+    'subject': 'posts',
+    'fields' : ['-rating'],
     'conditions': {
-      'author': '${user.id}'
+      'author': '{{ user._id }}'
     }
   });
   app.use('/roles',rolesService);
@@ -29,3 +31,40 @@ module.exports = function (app) {
 
   service.hooks(hooks);
 };
+
+// roles examples
+// 'example1':{
+//   'description': 'anybody can read the posts title',
+//   'actions': ['read'],
+//   'subject': 'posts',
+//   'fields': ['title'],
+// },
+// 'example2':{
+//   'description': 'only author can delete or update the post',
+//   'actions': ['delete', 'update'],
+//   'subject': 'posts',
+//   'conditions': {
+//     'author': '{{ user._id }}'
+//   }
+// },
+// 'example3':{
+//   'description': 'anybody can read the posts title, only author can see the post body',
+//   'actions': ['read'],
+//   'subject': 'posts',
+//   'fields' : ['_id', 'title', {'body': '{{ user._id }}'}]
+// },
+// 'example4':{
+//   'description': 'user can update post except the rating field',
+//   'actions': ['update','create'],
+//   'subject': 'posts',
+//   'fields' : ['-rating'],
+//   'conditions': {
+//     'author': '{{ user._id }}'
+//   }
+// },
+// 'example5':{
+//   'description': 'anybody can see post except the _id field',
+//   'actions': ['read'],
+//   'subject': 'posts',
+//   'fields' : ['-_id']
+// },

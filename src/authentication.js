@@ -16,6 +16,20 @@ module.exports = function (app) {
 
   // Set up authentication with the secret
   app.configure(authentication(config));
+  
+  // Swagger docs
+  if(app.docs && app.docs.paths['/authentication']){
+    delete app.docs.paths['/authentication/{id}'];
+    app.docs.paths['/authentication'].post.description = 'Login';
+    app.docs.paths['/authentication'].post.parameters[0].schema = {
+      type: 'object',
+      properties: { 
+        strategy: { type: 'string', example: 'local' },
+        email: { type: 'string', example: 'userEmail@gmail.com' },
+        password: { type: 'string', example: 'password' }
+      }};
+  }
+
   app.configure(jwt());
   app.configure(local());
 

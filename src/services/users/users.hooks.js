@@ -3,46 +3,32 @@ const verifyHooks = require('feathers-authentication-management').hooks;
 const accountService = require('../authmanagement/notifier');
 const commonHooks = require('feathers-hooks-common');
 const usersCache = require('../../hooks/usersCache');
+const removeUserProtectedFields = require('../../hooks/removeUserProtectedFields');
 
 const {
   hashPassword, protect
 } = require('@feathersjs/authentication-local').hooks;
 
-const pick = require('../../utils/pick');
 module.exports = {
   before: {
-    all: [],
+    all: [commonHooks.when(
+      commonHooks.isProvider('external'),
+      removeUserProtectedFields(),
+    )],
     find: [],
     get: [
       commonHooks.when(
-        commonHooks.isProvider('server'), // We want to serve catch user only for authentication
+        commonHooks.isProvider('server'), // We want to serve user from catch only for authentication
         usersCache()
       )],
     create: [ 
       hashPassword(),
       verifyHooks.addVerification(),
     ],
-    update: [function(hook){
-      hook.data = pick(hook.data, hook.app.get('enums').USER_PROTECTED_FIELDS);
-      return hook;
-    }],
+    update: [],
     patch: [
-      commonHooks.iff(
-        commonHooks.isProvider('external'),
-        commonHooks.preventChanges(true, 
-          ...['email',
-            'isVerified',
-            'verifyToken',
-            'verifyShortToken',
-            'verifyExpires',
-            'verifyChanges',
-            'resetToken',
-            'resetShortToken',
-            'resetExpires']
-        ),
-        hashPassword(),
-        authenticate('jwt')
-      )
+      hashPassword(),
+      authenticate('jwt')
     ],
     remove: []
   },
@@ -53,6 +39,10 @@ module.exports = {
       // Always must be the last hook
       usersCache(), // after user is changed we want to clear catch;
       protect('password'),
+      commonHooks.when(
+        commonHooks.isProvider('external'),
+        removeUserProtectedFields(),
+      ),
     ],
     find: [],
     get: [],
@@ -62,14 +52,8 @@ module.exports = {
       },
       verifyHooks.removeVerification()
     ],
-    update: [function(hook){
-      hook.result = pick(hook.result, hook.app.get('enums').USER_PROTECTED_FIELDS);
-      return hook;
-    }, ],
-    patch: [function(hook){
-      hook.result = pick(hook.result, hook.app.get('enums').USER_PROTECTED_FIELDS);
-      return hook;
-    }, ],
+    update: [],
+    patch: [],
     remove: []
   },
 

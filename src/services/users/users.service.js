@@ -3,6 +3,7 @@ const createService = require('feathers-mongoose');
 const createModel = require('../../models/users.model');
 const hooks = require('./users.hooks');
 const errors = require('@feathersjs/errors');
+const modelToSwagger = require('../../utils/swagger.util');
 
 const notFound = new errors.NotFound('User does not exist');
 
@@ -16,28 +17,19 @@ module.exports = function (app) {
   };
   
   // Initialize our service with any options it requires
-  app.use('/users', createService(options));
+  const userService = createService(options);
+  userService.docs = modelToSwagger(Model);
+  app.use('/users', userService);
   // Get our initialized service so that we can register hooks
   const service = app.service('users');
-  // Swagger docs
-  if(app.docs && app.docs.paths['/users']){
-    app.docs.paths['/users'].post.description = 'Create user';
-    app.docs.paths['/users'].post.parameters[0].schema = {
-      type: 'object',
-      example: {
-        email: 'userEmail@gmail.com',
-        password: 'password'
-      }};
-  }
   service.hooks(hooks);
 
   // Return user document to authenticate user
   app.use('/me', {
     async find(params) {
       const userId = params.user && params.user._id;
-      const users = await Model.findById(userId);
-      if(users){
-        return users;
+      if(userId){
+        return await app.service('users').get(userId);
       }else{
         return notFound;
       }

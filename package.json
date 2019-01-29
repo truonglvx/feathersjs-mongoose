@@ -61,6 +61,7 @@
     "joi": "^14.3.1",
     "joi-errors-for-forms": "^0.2.6",
     "joigoose": "^4.0.4",
+    "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "mongodb-core": "^3.1.9",
     "mongoose": "^5.4.2",

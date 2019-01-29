@@ -118,4 +118,15 @@ describe('\'pick\' util', () => {
       assert.fail('pick not as except', {res, except});
     }
   });
+  it('get only _id and user.name with invalid condiation ', () => {
+    const except = {
+      '_id': 4
+    };
+    const res = pick(testData, ['_id',{ 'user.name': {'_id': 45} }]);
+    if(isEquale(res, except)){
+      assert.ok('pick as except');
+    }else{
+      assert.fail('pick not as except', {res, except});
+    }
+  });
 });

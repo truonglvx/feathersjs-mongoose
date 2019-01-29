@@ -2,7 +2,7 @@
 const log = require('./hooks/log');
 const { when } = require('feathers-hooks-common');
 const  authorize = require('./hooks/abilities');
-const  permittedFields = require('./hooks/permittedFields');
+const  sanitizedData = require('./hooks/sanitizedData');
 const authenticate = require('./hooks/authenticate');
 
 module.exports = {
@@ -13,8 +13,8 @@ module.exports = {
         hook => hook.params.provider &&
         (`/${hook.path}` !== hook.app.get('authentication').path),
         authenticate, 
-        authorize(),
-        permittedFields()
+        authorize(), // Checks whether the client has permission
+        sanitizedData() // Remove data before Create/Update
       ),
     ],
     find: [],
@@ -29,7 +29,7 @@ module.exports = {
     all: [ log(),
       when(
         hook => hook.params.provider,
-        permittedFields()
+        sanitizedData() // Remove data after reading before sending to client
       ),
     ],
     find: [],

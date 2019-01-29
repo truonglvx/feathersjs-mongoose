@@ -2,8 +2,7 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const verifyHooks = require('feathers-authentication-management').hooks;
 const accountService = require('../authmanagement/notifier');
 const commonHooks = require('feathers-hooks-common');
-const { iff, isProvider  } = require('feathers-hooks-common');
-const { packRules } = require('../../utils/helpers');
+const usersCache = require('../../hooks/usersCache');
 
 const {
   hashPassword, protect
@@ -23,7 +22,11 @@ module.exports = {
   before: {
     all: [],
     find: [],
-    get: [],
+    get: [
+      commonHooks.when(
+        commonHooks.isProvider('server'), // We want to serve catch user only for authentication
+        usersCache()
+      )],
     create: [ 
       hashPassword(),
       verifyHooks.addVerification(),
@@ -57,13 +60,11 @@ module.exports = {
     all: [ 
       // Make sure the password field is never sent to the client
       // Always must be the last hook
+      usersCache(), // after user is changed we want to clear catch;
       protect('password'),
     ],
     find: [],
-    get: [ iff(isProvider('server'), function(hook){
-      hook.result.roles = packRules(hook.result.roles); // minimized roles size before set on JWT
-      return hook;
-    })],
+    get: [],
     create: [
       context => {
         accountService(context.app).notifier('resendVerifySignup', context.result);
@@ -73,11 +74,11 @@ module.exports = {
     update: [function(hook){
       hook.result = pick(hook.result, protectedFields);
       return hook;
-    }],
+    }, ],
     patch: [function(hook){
       hook.result = pick(hook.result, protectedFields);
       return hook;
-    }],
+    }, ],
     remove: []
   },
 

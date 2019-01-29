@@ -4,6 +4,19 @@
 // for more of what you can do here.
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
+  const { Schema } = mongooseClient;
+  const profileSchema = new mongooseClient.Schema(
+    {
+      'displayName': String,
+      'first_name': String,
+      'last_name': String,
+      'email': String,
+      'gender': String,
+      'profileUrl': String,
+      'birthday': String,
+      'picture': String,
+    }
+  );
   const users = new mongooseClient.Schema(
     {
       email: { type: String, unique: true, lowercase: true },
@@ -18,7 +31,8 @@ module.exports = function(app) {
       verifyChanges: { type: Object },
       resetToken: { type: String },
       resetExpires: { type: Date },
-      roles: [{ type: mongooseClient.Schema.Types.ObjectId, ref: 'roles' }]
+      roles: [{ type: Schema.Types.ObjectId, ref: 'roles' }],
+      profile: profileSchema
     },
     { timestamps: true }
   );

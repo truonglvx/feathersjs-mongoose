@@ -31,33 +31,6 @@ const compiledRolesTemplate = function(roles, data){
 };
 
 
-const joinIfArray = value => Array.isArray(value) ? value.join(',') : value;
-
-function packRules(rules) { // Copy from @casl , changed the fields handle to keep as array 
-  return rules.map(({ actions, subject, conditions, inverted, fields, reason }) => {
-    // eslint-disable-line
-    const rule = [joinIfArray(actions), joinIfArray(subject), conditions || 0, inverted ? 1 : 0, fields || 0, reason || 0];
-
-    while (!rule[rule.length - 1]) rule.pop();
-
-    return rule;
-  });
-}
-
-function unpackRules(rules) {
-  return rules.map(([actions, subject, conditions, inverted, fields, reason]) => {
-    const value = {
-      actions: actions.split(','),
-      subject: subject.split(','),
-      inverted: !!inverted,
-    };
-    if(conditions) value.conditions = conditions;
-    if(fields) value.fields = fields;
-    if(reason) value.reason = reason;
-    return value;
-  });
-}
-
 function swaggerAuthenticationCookie(hook) {
   if(hook && hook.app.get('host') === 'localhost' &&  hook.params && hook.params.headers && hook.params.headers.referer && hook.params.headers.referer.startsWith('http://localhost:3030/docs')){
     // hook.params.headers.authorization = 
@@ -76,7 +49,5 @@ function swaggerAuthenticationCookie(hook) {
 module.exports = {
   deletePropertyPath,
   compiledRolesTemplate,
-  packRules,
-  unpackRules,
   swaggerAuthenticationCookie
 };

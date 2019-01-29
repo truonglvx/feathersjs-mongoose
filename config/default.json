@@ -88,13 +88,29 @@
       "secure": false
     }
   },
+  "roles-cache": {
+    "enabled": true,
+    "local-catch": true,
+    "local-config": {
+      "max": 400,
+      "maxAge": 3600000
+    }
+  },
+  "users-cache": {
+    "enabled": true,
+    "local-catch": true,
+    "local-config": {
+      "max": 100,
+      "maxAge": 3600000
+    }
+  },
   "s3": {
     "bucket" : "feathersjs-test",
     "accessKeyId": "AKIAIC6GATJIV2P4W5SA",
     "secretAccessKey": "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"
   },
   "mailgun": {
-    "apiKey": "key-41356e8f94a1916bc5dd691e914415b4",
+    "apiKey": "key-bb4d6cea2705b605735065eddb8a6d8d",
     "domain": "info.kanmashvim.co.il"
   },
   "twilio": {

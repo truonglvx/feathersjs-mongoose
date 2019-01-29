@@ -1,9 +1,16 @@
 
 
+const commonHooks = require('feathers-hooks-common');
+const rolesCache = require('../../hooks/rolesCache');
+
 module.exports = {
   before: {
     all: [],
-    find: [],
+    find: [
+      commonHooks.when(
+        commonHooks.isProvider('server'), // We want to serve catch roles only for ability service;
+        rolesCache()
+      )],
     get: [],
     create: [],
     update: [],
@@ -12,13 +19,13 @@ module.exports = {
   },
 
   after: {
-    all: [],
+    all: [rolesCache()],
     find: [],
     get: [],
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [],
   },
 
   error: {

@@ -5,30 +5,47 @@
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
+
+  const blockedSchema = new Schema({
+    user: { type: Schema.Types.ObjectId, ref: 'users', required: true },
+    roles: [{ type: Schema.Types.ObjectId, ref: 'roles' }],
+    blockAll: Boolean
+  }, {
+    timestamps: true
+  });
+
   const roles = new Schema({
-    actions: [{type: String, enum:['create', 'read', 'update', 'delete'], required: true}],
-    subject: {
-      type: String
+    name: {
+      type: String,
+      required: true
     },
+    description: String,
+    type: {
+      type: String,
+      enum:['private', 'public', 'blocked'],
+      // public role is rule that applies to everyone
+      // private role is rule that applies only on user with pointer to this role
+      // blocked is special that help us block user from specific roles or for all roles,
+      // we need this because JWT come from client with user roles
+      required: true,
+      default: 'private'
+    },
+    blocked: blockedSchema,
+    actions: [{type: String, enum:['create', 'read', 'update', 'delete','manage'], required: true}],
+    subject: [{
+      type: String
+    }],
     fields: [],
     conditions: {
       type: Object
     },
-    description: String
+    active: {
+      type: Boolean,
+      default: true
+    }
   }, {
     timestamps: true
   });
 
   return mongooseClient.model('roles', roles);
 };
-
-/* Role example
-{
-  "actions": ["create", "read", "update", "delete"],
-  "subject": "Post",
-  'fields': ['_id', {'title': {'author': '${user.id}'}}],
-  "conditions": {
-    "author": "${user.id}"
-  }
-}
-*/

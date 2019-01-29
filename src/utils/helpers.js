@@ -1,11 +1,17 @@
 let nunjucks = require('nunjucks');
 
-const deletePropertyPath = function (obj, path) {
 
+/**
+ * @function deletePropertyPath
+ * @param {object} obj {user: {name: 'Dor'}}
+ * @param {string} path 'user.name'
+ * delete value from object with deep support 
+ */
+const deletePropertyPath = function (obj, path) {
   if (!obj || !path) {
     return;
   }
-  
+
   if (typeof path === 'string') {
     path = path.split('.');
   }
@@ -23,6 +29,12 @@ const deletePropertyPath = function (obj, path) {
 
 
 
+/**
+ * @function compiledRolesTemplate
+ * @param {*} roles 
+ * @param {*} data 
+ * convert [{author: {{ user.id }} }] to [{author: '5c4f44c3e9e159be92c7ce17' }]
+ */
 const compiledRolesTemplate = function(roles, data){
   var rolesString = JSON.stringify(roles);
   var compiled = nunjucks.renderString(rolesString, data);
@@ -31,6 +43,10 @@ const compiledRolesTemplate = function(roles, data){
 };
 
 
+/**
+ * @function swaggerAuthenticationCookie
+ * we want to enabled swagger token from cookie
+ */
 function swaggerAuthenticationCookie(hook) {
   if(hook && hook.app.get('host') === 'localhost' &&  hook.params && hook.params.headers && hook.params.headers.referer && hook.params.headers.referer.startsWith('http://localhost:3030/docs')){
     // hook.params.headers.authorization = 

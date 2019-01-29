@@ -24,11 +24,12 @@ const app = express(feathers());
 
 const bodyParser = require('body-parser');
 const swagger = require('feathers-swagger');
+const enums = require('./enums');
 
 var feathersLogger = require('feathers-logger');
 
 app.configure(feathersLogger(logger));
-
+app.set('enums', enums);
 // Load app configuration
 app.configure(configuration());
 // Enable security, CORS, compression, favicon and body parsing

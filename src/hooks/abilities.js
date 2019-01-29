@@ -76,7 +76,6 @@ module.exports = function abilities(name = null) {
       }
       const hasUser = hook.params.user && hook.params.user._id;
       const userId = hasUser && hook.params.user._id;
-      console.log({user: hook.params.user})
       const userRolesIds = hasUser ? (hook.params.user.roles || []) : [];
       const userRoles = [];
       const publicRoles = [];

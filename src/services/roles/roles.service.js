@@ -17,7 +17,6 @@ module.exports = function (app) {
 
   // Initialize our service with any options it requires
   const rolesService = createService(options);
-  
   app.use('/roles',rolesService);
   // Swagger docs
   if(app.docs && app.docs.paths['/roles']){
@@ -168,4 +167,4 @@ const roles_examples = [
     },
     "active": true
   }
-]
+];

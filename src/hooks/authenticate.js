@@ -1,7 +1,7 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { NotAuthenticated } = require('feathers-errors');
 const verifyIdentity = authenticate('jwt');
-const {swaggerAuthenticationCookie} = require('../utils/helpers')
+const {swaggerAuthenticationCookie} = require('../utils/helpers');
 function hasToken(hook) {
   const authorization = hook && hook.params && hook.params.headers && hook.params.headers.authorization;
 

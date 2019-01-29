@@ -1,5 +1,4 @@
 
-const feathers = require('@feathersjs/feathers');
 const feathersCache = require('@feathers-plus/cache');
 
 let rolesCacheMap;

@@ -23,7 +23,6 @@ module.exports =  function resendVerifySignup(options, user) {
     subject: 'Confirm Signup',
     html: compiledHTML
   };
-  console.log({fromEmail, user:  user.email})
   return sendEmail(options, email);
 
 };

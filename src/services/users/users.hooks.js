@@ -8,15 +8,6 @@ const {
   hashPassword, protect
 } = require('@feathersjs/authentication-local').hooks;
 
-const protectedFields = ['-email',
-  '-isVerified',
-  '-verifyToken',
-  '-verifyShortToken',
-  '-verifyExpires',
-  '-verifyChanges',
-  '-resetToken',
-  '-resetShortToken',
-  '-resetExpires'];
 const pick = require('../../utils/pick');
 module.exports = {
   before: {
@@ -32,7 +23,7 @@ module.exports = {
       verifyHooks.addVerification(),
     ],
     update: [function(hook){
-      hook.data = pick(hook.data, protectedFields);
+      hook.data = pick(hook.data, hook.app.get('enums').USER_PROTECTED_FIELDS);
       return hook;
     }],
     patch: [
@@ -72,11 +63,11 @@ module.exports = {
       verifyHooks.removeVerification()
     ],
     update: [function(hook){
-      hook.result = pick(hook.result, protectedFields);
+      hook.result = pick(hook.result, hook.app.get('enums').USER_PROTECTED_FIELDS);
       return hook;
     }, ],
     patch: [function(hook){
-      hook.result = pick(hook.result, protectedFields);
+      hook.result = pick(hook.result, hook.app.get('enums').USER_PROTECTED_FIELDS);
       return hook;
     }, ],
     remove: []

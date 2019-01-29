@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { accessibleRecordsPlugin } = require('@casl/mongoose')
+const { accessibleRecordsPlugin } = require('@casl/mongoose');
 
 
 module.exports = function (app) {

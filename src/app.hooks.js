@@ -14,7 +14,7 @@ module.exports = {
         (`/${hook.path}` !== hook.app.get('authentication').path),
         authenticate, 
         authorize(), // Checks whether the client has permission
-        sanitizedData() // Remove data before Create/Update
+        sanitizedData() // Remove fields that block by roles from data before Create/Update
       ),
     ],
     find: [],
@@ -29,7 +29,7 @@ module.exports = {
     all: [ log(),
       when(
         hook => hook.params.provider,
-        sanitizedData() // Remove data after reading before sending to client
+        sanitizedData() // Remove fields that blocked by the roles from data before sending to client
       ),
     ],
     find: [],

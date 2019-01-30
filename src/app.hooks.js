@@ -4,6 +4,7 @@ const { when } = require('feathers-hooks-common');
 const  authorize = require('./hooks/abilities');
 const  sanitizedData = require('./hooks/sanitizedData');
 const authenticate = require('./hooks/authenticate');
+const validateSchema = require('./hooks/validateSchema');
 
 module.exports = {
   before: {
@@ -19,9 +20,9 @@ module.exports = {
     ],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
+    create: [validateSchema()],
+    update: [validateSchema()],
+    patch: [validateSchema()],
     remove: []
   },
 

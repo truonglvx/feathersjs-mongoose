@@ -150,6 +150,7 @@ module.exports = function abilities(name = null) {
       return hook;
     } catch (error) {
       hook.app.error('abilities check', error);
+      throw new Forbidden(error);
     }
   };
 };

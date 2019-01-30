@@ -48,9 +48,13 @@ module.exports = {
     get: [],
     create: [
       context => {
-        accountService(context.app).notifier('resendVerifySignup', context.result);
+        const applyIsVerifiedEmail = context.app.get('verifyEmail').enabled;
+        if(applyIsVerifiedEmail){
+          accountService(context.app).notifier('resendVerifySignup', context.result);
+          context.result.verifiedRequired = true;
+        }
       },
-      verifyHooks.removeVerification()
+      verifyHooks.removeVerification(),
     ],
     update: [],
     patch: [],

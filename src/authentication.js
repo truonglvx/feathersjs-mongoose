@@ -9,7 +9,7 @@ const GithubStrategy = require('passport-github');
 // const verifyHooks = require('feathers-authentication-management').hooks;
 const verifyHooks = require('feathers-authentication-management').hooks;
 const { debug } = require('feathers-hooks-common');
-
+const returnUserOnLogin = require('./hooks/returnUserOnLogin')
 module.exports = function (app) {
   const config = app.get('authentication');
   const applyIsVerifiedEmail = app.get('verifyEmail').enabled;
@@ -63,7 +63,12 @@ module.exports = function (app) {
         applyIsVerifiedEmail ? verifyHooks.isVerified() : debug('Allow unVerify email to login')
       ],
       remove: [
-        authentication.hooks.authenticate('jwt')
+        authentication.hooks.authenticate(config.strategies),
+      ]
+    },
+    after: {
+      create: [
+        returnUserOnLogin()
       ]
     }
   });

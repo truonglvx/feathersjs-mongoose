@@ -16,7 +16,7 @@ const getJoiObject = function(withRequired){
     googleId: Joi.string().allow(null),
     resetExpires: Joi.date().allow(null),
     verifyExpires: Joi.date().allow(null),
-    roles: Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'roles' })),
+    roles: Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'roles', displayKey: 'name' })),
   };
 };
 
@@ -24,3 +24,7 @@ module.exports = {
   withRequired: Joi.object(getJoiObject(true)),
   withoutRequired: Joi.object(getJoiObject(false))
 };
+
+// const joi2json = require('../utils/joi2json');
+
+// console.log(joi2json(Joi.object(getJoiObject(true))).properties.roles.items.meta)

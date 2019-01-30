@@ -8,9 +8,9 @@ module.exports = function validateSchema() {
 
       const validators = hook.app.get(`validators-${serviceName}`);
       let validator = null;
-      if(method === 'create') validator = validators.withRequired;
-      if(method === 'patch' || method === 'update') validator = validators.withoutRequired;
       if(validators){
+        if(method === 'create') validator = validators.withRequired;
+        if(method === 'patch' || method === 'update') validator = validators.withoutRequired;
         if(validator){
           const check = validator.validate(hook.data);
           if(check.error){

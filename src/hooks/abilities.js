@@ -19,12 +19,13 @@ function subjectName(subject) {
 function defineAbilitiesFor(user, userRoles, publicRoles) {
   const { rules, can } = AbilityBuilder.extract();
   // Hard coding roles
+  
   can('create', ['users', 'authManagement']);
   
   // Allow this only for the first user
   // eslint-disable-next-line no-console
-  console.warn("Important- disabled this hard coding role after create your first user, can('manage', ['roles','users'])");
-  can('manage', ['roles','users','dashboard']);
+  console.warn("!!Important!!- disabled this hard coding role after create your first user, can('manage', 'all')");
+  can('manage', 'all');
   // Create your first role 
   // {"name": "manage role", "actions": [ "manage", ], "type": "private", "subject": "roles" }
   // and the add this roleId your your user roles ['roleId'];

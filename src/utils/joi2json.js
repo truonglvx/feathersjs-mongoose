@@ -91,6 +91,7 @@ let TYPES = {
 
       if (list) {
         schema.items = convert(list[0]);
+        schema.items.meta = list[0]._meta;
       }
     }
 

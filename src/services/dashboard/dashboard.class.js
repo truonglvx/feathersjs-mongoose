@@ -23,7 +23,10 @@ class Service {
           });
         }
       });
-      return data;
+      return {
+        'total': data.length,
+        'data': data
+      };
     } catch (error) {
       throw new GeneralError(); 
     }

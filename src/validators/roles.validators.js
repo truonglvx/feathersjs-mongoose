@@ -2,14 +2,13 @@ const Joi = require('joi');
 
 const getJoiObject = function(withRequired){
   const required = withRequired ? 'required' : 'optional';
-  return {
-    // author: Joi.string().meta({ type: 'ObjectId', ref: 'users' }),
+  return Joi.object({
     name: Joi.string()[required](),
     description: Joi.string(),
     type: Joi.string().valid('private', 'public','blocked'),
     blocked: Joi.object({
-      user:  Joi.string().meta({ type: 'ObjectId', ref: 'users' }),
-      roles:  Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'users' })),
+      user:  Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'email' }),
+      roles:  Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'name'})),
       blockAll: Joi.boolean()
     }),
     actions: Joi.array().items(Joi.string().valid('create', 'read','update','delete','manage'))[required](),
@@ -17,10 +16,10 @@ const getJoiObject = function(withRequired){
     fields: Joi.array(),
     conditions: Joi.object(),
     active: Joi.boolean(),
-  };
+  });
 };
 
-module.exports = {
-  withRequired: Joi.object(getJoiObject(true)),
-  withoutRequired: Joi.object(getJoiObject(false))
-};
+module.exports = getJoiObject;
+// const joi2json = require('../utils/joi2json');
+
+// console.log(joi2json(Joi.object(getJoiObject(true))))

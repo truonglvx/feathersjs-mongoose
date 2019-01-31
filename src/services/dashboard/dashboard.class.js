@@ -13,14 +13,16 @@ class Service {
       const data = [];
       Object.keys(this.app.docs.paths).forEach(path => {
         const name = path.substring(1);
-        const validators = this.app.get(`validators-${name}`);
-        const createValidators = validators && validators.withoutRequired;
-        const jsonSchema = createValidators && joi2json(createValidators);
-        if(jsonSchema){
-          data.push({
-            name,
-            schema: jsonSchema
-          });
+        const getValidators = this.app.get(name + 'getJoiValidators');
+        if(getValidators){
+          const validators = getValidators(true);
+          const jsonSchema = joi2json(validators);
+          if(jsonSchema){
+            data.push({
+              name,
+              schema: jsonSchema
+            });
+          }
         }
       });
       return {

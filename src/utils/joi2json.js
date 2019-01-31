@@ -175,6 +175,7 @@ let TYPES = {
     schema.properties = {};
     schema.additionalProperties = Boolean(joi._flags.allowUnknown);
     schema.patterns = joi._inner.patterns.map((pattern) => {
+
       return {regex: pattern.regex, rule: convert(pattern.rule)};
     });
 
@@ -206,6 +207,7 @@ let TYPES = {
  * @returns {JSONSchema}
  */
 function convert (joi, transformer = null) {
+
   assert(typeof joi === 'object' && joi.isJoi === true, 'requires a joi schema object');
 
   assert(joi._type, 'joi schema object must have a type');
@@ -245,8 +247,7 @@ function convert (joi, transformer = null) {
   if (joi._flags && joi._flags.default !== undefined && joi._flags.default !== null) {
     schema['default'] = joi._flags.default;
   }
-
-  if (joi._valids && joi._valids._set && joi._valids._set.length && joi._flags.allowOnly) {
+  if (joi._valids && joi._valids._set && joi._valids._set.size && joi._flags.allowOnly) {
     if (Array.isArray(joi._inner.children)) {
       return {
         '------oneOf': [
@@ -258,7 +259,7 @@ function convert (joi, transformer = null) {
         ]
       };
     }
-    schema['enum'] = joi._valids._set;
+    schema['enum'] = Array.from(joi._valids._set);
   }
 
   let result = TYPES[joi._type](schema, joi);

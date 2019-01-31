@@ -2,18 +2,15 @@ const Joi = require('joi');
 
 const getJoiObject = function(withRequired){
   const required = withRequired ? 'required' : 'optional';
-  return {
+  return Joi.object({
     author: Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'email', } ),
     title: Joi.string()[required](),
     body: Joi.string()[required](),
     rating: Joi.number().max(5),
-  };
+  });
 };
 
-module.exports = {
-  withRequired: Joi.object(getJoiObject(true)),
-  withoutRequired: Joi.object(getJoiObject(false))
-};
+module.exports = getJoiObject;
 
 // const joi2json = require('../utils/joi2json');
 

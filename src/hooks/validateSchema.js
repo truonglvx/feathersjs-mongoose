@@ -6,11 +6,11 @@ module.exports = function validateSchema() {
       const method = hook.method; // update,patch,create
       const serviceName = hook.path; //posts
 
-      const validators = hook.app.get(`validators-${serviceName}`);
+      const getValidators = hook.app.get(serviceName + 'getJoiValidators');
       let validator = null;
-      if(validators){
-        if(method === 'create') validator = validators.withRequired;
-        if(method === 'patch' || method === 'update') validator = validators.withoutRequired;
+      if(getValidators){
+        if(method === 'create' || method === 'update') validator = getValidators(true); // update is like create, it will replace all current data
+        if(method === 'patch') validator = getValidators(false);
         if(validator){
           const check = validator.validate(hook.data);
           if(check.error){

@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const getJoiObject = function(withRequired){
   const required = withRequired ? 'required' : 'optional';
-  return {
+  return Joi.object({
     password: Joi.string()[required](),
     email: Joi.string().email().meta({ unique: true, lowercase: true })[required](),
     verifyChanges: Joi.object().allow(null),
@@ -17,13 +17,10 @@ const getJoiObject = function(withRequired){
     resetExpires: Joi.date().allow(null),
     verifyExpires: Joi.date().allow(null),
     roles: Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'roles', displayKey: 'name' })),
-  };
+  });
 };
 
-module.exports = {
-  withRequired: Joi.object(getJoiObject(true)),
-  withoutRequired: Joi.object(getJoiObject(false))
-};
+module.exports = getJoiObject;
 
 // const joi2json = require('../utils/joi2json');
 

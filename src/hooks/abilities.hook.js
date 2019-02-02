@@ -142,6 +142,7 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
       hook.params.abilityFields = model.accessibleFieldsBy(ability, action);
     }
     if(testMode) {
+      if(!hook.data) hook.data = {};
       hook.data[TYPE_KEY] = serviceName;
       try {
         throwUnlessCan(method, hook.data);

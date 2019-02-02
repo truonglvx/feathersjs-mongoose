@@ -1,7 +1,7 @@
 // roles-model.js - A mongoose model
 const rolesValidators = require('../validators/roles.validators.js');
-const createNewMongooseModelFromJoi = require('../utils/createNewMongooseModelFromJoi');
+const createModelFromJoi = require('../utils/createModelFromJoi');
 
 module.exports = function (app) {
-  return createNewMongooseModelFromJoi(app, 'roles', rolesValidators);
+  return createModelFromJoi(app, 'roles', rolesValidators);
 };

@@ -1,4 +1,6 @@
 'use strict';
+// Convert Joi schema to JSON schema;
+
 // Copy from https://github.com/yolopunk/joi2json
 // We added schema.properties[property.key].meta = property.schema._meta
 // to keep the meth that includes ref data
@@ -139,6 +141,7 @@ let TYPES = {
         break;
       case 'regex':
         // for backward compatibility
+        // eslint-disable-next-line no-case-declarations
         const arg = test.arg;
 
         // This is required for backward compatibility
@@ -149,6 +152,7 @@ let TYPES = {
         // before Joi v9: test.arg
         // since Joi v9: test.arg.pattern
 
+        // eslint-disable-next-line no-case-declarations
         const pattern = arg && arg.pattern ? arg.pattern : arg;
         schema.pattern = String(pattern).replace(/^\//, '').replace(/\/$/, '');
         break;

@@ -62,8 +62,21 @@ function swaggerAuthenticationCookie(hook) {
   }
 }
 
+/**
+ * @function asyncForEach
+ * @param {*} array 
+ * @param {*} callback
+ * async for each function
+ */
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
+
 module.exports = {
   deletePropertyPath,
   compiledRolesTemplate,
-  swaggerAuthenticationCookie
+  swaggerAuthenticationCookie,
+  asyncForEach
 };

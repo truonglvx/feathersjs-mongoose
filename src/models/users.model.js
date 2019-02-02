@@ -4,8 +4,8 @@
 // for more of what you can do here.
 
 const usersValidators = require('../validators/users.validators.js');
-const createNewMongooseModelFromJoi = require('../utils/createNewMongooseModelFromJoi');
+const createModelFromJoi = require('../utils/createModelFromJoi');
 
 module.exports = function (app) {
-  return createNewMongooseModelFromJoi(app, 'users', usersValidators);
+  return createModelFromJoi(app, 'users', usersValidators);
 };

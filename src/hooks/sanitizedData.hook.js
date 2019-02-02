@@ -1,4 +1,9 @@
 
+// sanitizedData.js
+// sanitizedData hook will remove locked fields from user from the.
+// and remove from update/create/patch before make the request
+
+
 const pick = require('../utils/pick');
 
 /**

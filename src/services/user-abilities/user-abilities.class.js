@@ -11,11 +11,11 @@ class Service {
 
   async find(params) {
     let result = {};
-    if(!params.query || !params.query.userId || !params.query.serviceName) {
-      throw new GeneralError('userId and serviceName are required');
+    if(!params.query || !params.query.serviceName) {
+      throw new GeneralError('serviceName is required');
     }
     if(params.query.includeSchema){
-      const getValidators = this.app.get(params.query.serviceName + 'getJoiValidators');
+      const getValidators = this.app.get(params.query.serviceName + 'getJoi');
       if(getValidators){
         const validators = getValidators(true);
         const jsonSchema = joi2json(validators);

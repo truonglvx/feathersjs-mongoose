@@ -1,13 +1,36 @@
+// pick.js
+// This function help us to pick specific fields from object
+// the function get object and fields array
+// the array can be negative ['-name','-price'] and the result will be all fields except price and name
+// of positive, ['name','price'] and the result will be only name and price
+// you can't mixed positive and negative
+// each field can be an object to include condition [{name: id: 1}] - return name only if is equals to one
+// we use sift to check your condition, sift filter base the mongodb query, see https://docs.mongodb.com/manual/reference/operator/query/** 
+// the field name can be deep, like that ['product.price']- in this example we will return only the price from the product object
+// if product is not an object then we will return the product value, this is useful for reference field that sometimes you populate them and sometimes you not
+// depp to arr field ['comments._id'] - if comments is array of object then in this example we will return array with object with comment _id 
+
 const validate = require('validate.js');
 const sift = require('sift').default;
 const {deletePropertyPath} = require('./helpers');
 const cloneDeep = require('lodash.clonedeep');
 
+/**
+ * @function can
+ * @param {*} data 
+ * @param {*} conditions
+ * can help to check field condition
+ */
 const can = function(data, conditions) {
-  const _sift = sift(conditions);
-  return _sift(data);
+  const _sift = sift(conditions); // Create sift
+  return _sift(data); // Make the query
 };
 
+/**
+ * @function getFieldProperties
+ * @param {*} field
+ * this function will convert file to object with data that help us to pick
+ */
 const getFieldProperties = function(field){
   if(typeof field === 'string'){
     const isNegative = field[0] === '-';
@@ -29,6 +52,7 @@ const getFieldProperties = function(field){
     };
   }
 };
+
 /**
  * @function pick
  * @param {object} data Pass nested object {}
@@ -43,11 +67,14 @@ const pick = function(_data, _fields){
   
   
   /**
-   * convert _fields to [{name: String, isNegative: Boolean, isDeep: Boolean}, {name: String, isNegative: Boolean, conditions: Object, isDeep: Boolean}]
+   * convert _fields from ['price'] to [{name:'price', isNegative: true, isDeep: false, conditions: null}]
+   * {name: String, isNegative: Boolean, conditions: Object, isDeep: Boolean}
    */
   const fields = _fields.map(field => {
     const fieldProperties = getFieldProperties(field);// check if one of the fields start with '-','-name' OR {'-name': {id: 123}}
+    
     if(fieldProperties.isNegative) isFieldsNegative = true;
+    
     return fieldProperties;
   });
 

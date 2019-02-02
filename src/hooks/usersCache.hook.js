@@ -1,4 +1,10 @@
 
+// usersCache.js
+// This hook will check if specific user is saved in cache
+// if the user will be found in the cache then response will be from cache
+// if not then we will be set in the cache at hook.after.get the user 
+// when user is patch/update/delete we will remove him from cache
+
 const feathersCache = require('@feathers-plus/cache');
 
 let userCacheMap;

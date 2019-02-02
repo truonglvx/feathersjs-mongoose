@@ -4,13 +4,15 @@ module.exports = function validateSchema() {
   return async function(hook) {
     try {
       const method = hook.method; // update,patch,create
-      const serviceName = hook.path; //posts
+      const serviceName = hook.path; //posts, products...
 
-      const getValidators = hook.app.get(serviceName + 'getJoiValidators');
+      const getValidators = hook.app.get(serviceName + 'getJoi');
       let validator = null;
       if(getValidators){
-        if(method === 'create' || method === 'update') validator = getValidators(true); // update is like create, it will replace all current data
-        if(method === 'patch') validator = getValidators(false);
+        // update is like create, it will replace all current data then check with required tests
+        // in patch we didn't check the requirers tests
+        const allowRequiredTest = ['create', 'update'].includes(method);
+        validator = getValidators(allowRequiredTest);
         if(validator){
           const check = validator.validate(hook.data);
           if(check.error){

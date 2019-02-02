@@ -1,10 +1,10 @@
 // Application hooks that run for every service
-const log = require('./hooks/log');
+const log = require('./hooks/log.hook.js');
 const { when } = require('feathers-hooks-common');
-const  authorize = require('./hooks/abilities');
-const  sanitizedData = require('./hooks/sanitizedData');
-const authenticate = require('./hooks/authenticate');
-const validateSchema = require('./hooks/validateSchema');
+const  authorize = require('./hooks/abilities.hook.js');
+const sanitizedData = require('./hooks/sanitizedData.hook.js');
+const authenticate = require('./hooks/authenticate.hook.js');
+const validateSchema = require('./hooks/validateSchema.hook.js');
 
 const skipServices = ['dashboard','user-abilities'];
 module.exports = {

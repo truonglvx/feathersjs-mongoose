@@ -2,7 +2,6 @@
 // Initializes the `roles` service on path `/roles`
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/roles.model');
-const { GeneralError } = require('@feathersjs/errors');
 const hooks = require('./roles.hooks');
 
 module.exports = function (app) {

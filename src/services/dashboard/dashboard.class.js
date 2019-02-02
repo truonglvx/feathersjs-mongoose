@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
-const validate = require('validate.js');
-const joi2json = require('../../utils/joi2json');
+
+
 const { GeneralError } = require('@feathersjs/errors');
+const {asyncForEach} = require('../../utils/helpers'); 
 
 class Service {
   constructor (options) {
@@ -11,54 +12,33 @@ class Service {
 
   async find (params) {
     try {
-      const data = [];
-      Object.keys(this.app.docs.paths).forEach(async path => {
-        const name = path.substring(1);
-        const getValidators = this.app.get(name + 'getJoiValidators');
-        if(getValidators){
-          const validators = getValidators(true);
-          const jsonSchema = joi2json(validators);
-          if(jsonSchema){
-            data.push({
-              name,
-              schema: jsonSchema
-            });
+      const collections = [];
+      
+      const services = Object.keys(this.app.docs.paths); // All app services as array ['/posts','/roles']
+      
+      await asyncForEach(services, async (service) => {
+        const name = service.substring(1); // from '/post' to 'post'
+
+        const getJoi = this.app.get(name + 'getJoi'); // This will be set in app by src/utils/createModelFromJoi.js
+        
+        if(getJoi){ // Dashboard return only services with joi validators
+          
+          // ability is object with all abilities for the current user, canRead, canCreate....
+          const ability = await this.app.service('user-abilities').find({query: {serviceName: name, includeSchema: true}});
+          
+          if(ability && ability.result && ability.result.canRead){ // Return only result with readAbilities
+            collections.push(ability);
           }
         }
       });
+
       return {
-        'total': data.length,
-        'data': data
+        'total': collections.length, // Each user will get different result, depend of is rules
+        'data': collections
       };
     } catch (error) {
       throw new GeneralError(); 
     }
-  }
-
-  async get (id, params) {
-    return {
-      id, text: `A new message with ID: ${id}!`
-    };
-  }
-
-  async create (data, params) {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
-    }
-
-    return data;
-  }
-
-  async update (id, data, params) {
-    return data;
-  }
-
-  async patch (id, data, params) {
-    return data;
-  }
-
-  async remove (id, params) {
-    return { id };
   }
 }
 

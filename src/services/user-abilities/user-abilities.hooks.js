@@ -1,7 +1,7 @@
 
 
 
-const abilities = require('../../hooks/abilities');
+const abilities = require('../../hooks/abilities.hook.js');
 const pick = require('../../utils/pick');
 const cloneDeep = require('lodash.clonedeep');
 

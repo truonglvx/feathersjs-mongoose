@@ -2,6 +2,7 @@
 // Initializes the `roles` service on path `/roles`
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/roles.model');
+const { GeneralError } = require('@feathersjs/errors');
 const hooks = require('./roles.hooks');
 
 module.exports = function (app) {
@@ -18,6 +19,7 @@ module.exports = function (app) {
   // Initialize our service with any options it requires
   const rolesService = createService(options);
   app.use('/roles',rolesService);
+  
   // Swagger docs
   if(app.docs && app.docs.paths['/roles']){
     app.docs.paths['/roles'].post.description = 'Create and update roles collection';

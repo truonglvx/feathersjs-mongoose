@@ -6,6 +6,7 @@ const  sanitizedData = require('./hooks/sanitizedData');
 const authenticate = require('./hooks/authenticate');
 const validateSchema = require('./hooks/validateSchema');
 
+const skipServices = ['dashboard','user-abilities'];
 module.exports = {
   before: {
     all: [
@@ -14,8 +15,8 @@ module.exports = {
         hook => hook.params.provider &&
         (`/${hook.path}` !== hook.app.get('authentication').path),
         authenticate, 
-        authorize(), // Checks whether the client has permission
-        sanitizedData() // Remove fields that block by roles from data before Create/Update
+        authorize.hook, // Checks whether the client has permission
+        sanitizedData(skipServices) // Remove fields that block by roles from data before Create/Update
       ),
     ],
     find: [],
@@ -30,7 +31,7 @@ module.exports = {
     all: [ log(),
       when(
         hook => hook.params.provider,
-        sanitizedData() // Remove fields that blocked by the roles from data before sending to client
+        sanitizedData(skipServices) // Remove fields that blocked by the roles from data before sending to client
       ),
     ],
     find: [],

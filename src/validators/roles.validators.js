@@ -3,7 +3,7 @@ const Joi = require('joi');
 const getJoiObject = function(withRequired){
   const required = withRequired ? 'required' : 'optional';
   return Joi.object({
-    name: Joi.string()[required](),
+    name: Joi.string().min(5)[required](),
     description: Joi.string(),
     type: Joi.string().valid('private', 'public','blocked'),
     blocked: Joi.object({
@@ -16,6 +16,8 @@ const getJoiObject = function(withRequired){
     fields: Joi.array(),
     conditions: Joi.object(),
     active: Joi.boolean(),
+    from: Joi.date(),
+    to: Joi.date(),
   });
 };
 

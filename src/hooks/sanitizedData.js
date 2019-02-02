@@ -10,9 +10,10 @@ const pick = require('../utils/pick');
  * ['_id', 'title', {'body': '{'author': '{{ user._id }}'}'}] // allow _id and title to anybody but the body only for author
  * [{'-body': { 'author': '{{ user._id }}' }}] // allow all to anybody but remove body only for author
  */
-module.exports = function sanitizedData() {
+module.exports = function sanitizedData(skipServices) {
   return async function(hook) {
     try {
+      if(skipServices && skipServices.includes(hook.path)) return;
       const action = hook.method;
       const abilityFields = hook.params.abilityFields;
       const hookType = hook.type;

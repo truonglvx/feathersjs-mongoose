@@ -9,30 +9,25 @@ class Service {
     this.app = options.app;
   }
 
-  async find (params) {
-    try {
-      const data = [];
-      Object.keys(this.app.docs.paths).forEach(async path => {
-        const name = path.substring(1);
-        const getValidators = this.app.get(name + 'getJoiValidators');
-        if(getValidators){
-          const validators = getValidators(true);
-          const jsonSchema = joi2json(validators);
-          if(jsonSchema){
-            data.push({
-              name,
-              schema: jsonSchema
-            });
-          }
-        }
-      });
-      return {
-        'total': data.length,
-        'data': data
-      };
-    } catch (error) {
-      throw new GeneralError(); 
+  async find(params) {
+    let result = {};
+    if(!params.query || !params.query.userId || !params.query.serviceName) {
+      throw new GeneralError('userId and serviceName are required');
     }
+    if(params.query.includeSchema){
+      const getValidators = this.app.get(params.query.serviceName + 'getJoiValidators');
+      if(getValidators){
+        const validators = getValidators(true);
+        const jsonSchema = joi2json(validators);
+        if(jsonSchema){
+          result.schema =  jsonSchema;
+        }else{
+          result.schemaErr = 'Missing Schema';
+        }
+      }
+    }
+    result.data = params.query;
+    return result;
   }
 
   async get (id, params) {

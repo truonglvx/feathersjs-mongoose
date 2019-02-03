@@ -1,4 +1,11 @@
 
+
+// rolesCache.hook.js
+// This hook will check if roles collection is saved in cache
+// if the roles will be found in the cache then response will be from cache
+// if not then we will be set in the cache at hook.after.find the roles collection 
+// in each changed in roles collection we clear the cache
+
 const feathersCache = require('@feathers-plus/cache');
 
 let rolesCacheMap;

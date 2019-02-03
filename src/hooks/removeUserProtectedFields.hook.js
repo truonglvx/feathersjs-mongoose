@@ -1,3 +1,23 @@
+/**
+ * removeUserProtectedFields.hook.js
+ * Before update/create/patch
+ * this hook will remove this fields
+ *  'isVerified',
+    'verifyToken',
+    'verifyShortToken',
+    'verifyExpires',
+    'verifyChanges',
+    'resetToken',
+    'resetShortToken',
+    'resetExpires',
+    'password' -> allow only on create
+    'email', -> allow only on create and read
+  *
+  * After find/get
+  * this hook will remove password fields before sending data to user
+ */
+
+
 const pick = require('../utils/pick');
 
 module.exports = function removeUserProtectedFields() {
@@ -10,9 +30,11 @@ module.exports = function removeUserProtectedFields() {
     const USER_PROTECTED_FIELDS = [...hook.app.get('enums').USER_PROTECTED_FIELDS.map(field => `-${field}`)];
 
     if(hookType === 'before' && ['create', 'update', 'patch'].includes(method)){
-      if(['update', 'patch'].includes(method)){
-        USER_PROTECTED_FIELDS.push('-email');
-        USER_PROTECTED_FIELDS.push('-password');
+      if(method === 'create'){
+        USER_PROTECTED_FIELDS.filter(item => ['-password','-email'].includes(item)); // User able to pass email or password only on create method
+      }
+      else if(method === 'update' || method === 'patch'){
+        USER_PROTECTED_FIELDS.push('email');
       }
       if(hook.data && typeof hook.data === 'object'){
         const isArray = Array.isArray(hook.data);
@@ -23,18 +45,15 @@ module.exports = function removeUserProtectedFields() {
 
     if(hookType === 'after' && method === 'find'){
       if(hook.result.data){
-        USER_PROTECTED_FIELDS.push('-password');
         hook.result.data = hook.result.data.map(doc => pick(doc, USER_PROTECTED_FIELDS));
       }
       return hook;
     }
     if(hookType === 'after' && method === 'get'){
-      USER_PROTECTED_FIELDS.push('-password');
       hook.result = pick(hook.result, USER_PROTECTED_FIELDS);
       return hook;
     }
     if(hookType === 'after' && method === 'create'){
-      USER_PROTECTED_FIELDS.push('-password');
       hook.result = pick(hook.result, USER_PROTECTED_FIELDS);
       return hook;
     }

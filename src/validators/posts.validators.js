@@ -3,6 +3,9 @@ const Joi = require('joi');
 const getJoiObject = function(withRequired){
   const required = withRequired ? 'required' : 'optional';
   return Joi.object({
+    _id: Joi.string(),
+    createdAt: Joi.date(),
+    updatedAt: Joi.date(),
     author: Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'email', } ),
     title: Joi.string()[required](),
     body: Joi.string()[required](),

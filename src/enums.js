@@ -7,6 +7,9 @@ module.exports = {
     'verifyChanges',
     'resetToken',
     'resetShortToken',
-    'resetExpires']
+    'resetExpires',
+    'fromCache',
+    'password'
+  ]
 };
   

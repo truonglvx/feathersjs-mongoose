@@ -1,3 +1,19 @@
+/**
+ * returnUserOnLogin.hook.js
+ * By default https://github.com/feathersjs/authentication receive to client only the token after login/signup
+ * this hook will added the user data to repose
+ * response: {
+ *  accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6ImFjY2VzcyJ9.eyJ1c2VySWQiOiI1YzRmNDIzODg1YzFhNmJkODcwNzNiZTciLCJpYXQiOjE1NDkxOTczNzIsImV4cCI6MTU0OTI4Mzc3MiwiYXVkIjoiaHR0cHM6Ly95b3VyZG9tYWluLmNvbSIsImlzcyI6ImZlYXRoZXJzIiwic3ViIjoiYW5vbnltb3VzIiwianRpIjoiMmIwMGE0NjYtZDEyZi00ODg5LWFjOGItYjM5N2JiYWE1MGY3In0.ADYrhNzvmTmW78mEbf1WNauXvN3OOLQPlSySUuawyjw"
+    user: {
+      _id: "5c4f423885c1a6bd87073be7",
+      createdAt: "2019-01-28T17:56:08.023Z",
+      updatedAt: "2019-01-29T08:29:59.478Z",
+      roles: ["5c4f423885c1a6bd87073be8"],
+      __v: 0,
+      _id: "5c4f423885c1a6bd87073be7"
+    }
+  *}
+ */
 const pick = require('../utils/pick');
 
 module.exports = function returnUserOnLogin() {

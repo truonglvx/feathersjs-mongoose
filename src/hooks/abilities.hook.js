@@ -1,14 +1,26 @@
+// abilities.hook.js
+// https://blog.feathersjs.com/authorization-with-casl-in-feathersjs-app-fd6e24eefbff
+// abilities is run before each request, apply inside src/app.hooks.js
+// run after authenticate that validate user from headers
+// when user or anonymous user make request me make sure he have the right roles
+// roles can be hard coded in this file or came from server
+// 3 types of roles-
+//   1- public - rules that apply to everyone
+//   2- private - rules that apply for only user with pointer to this roles
+//   3- blocked - this roles are included user id and can block user roles or block the user.
+
 /* eslint-disable quotes */
 const { AbilityBuilder, Ability } = require('@casl/ability');
 const { toMongoQuery } = require('@casl/mongoose');
 const { Forbidden, GeneralError } = require('@feathersjs/errors');
 const TYPE_KEY = Symbol.for('type');
+const isEqual = require('lodash.isequal');
 const {compiledRolesTemplate} = require('../utils/helpers');
 
-const isEqual = require('lodash.isequal');
 Ability.addAlias('update', 'patch');
 Ability.addAlias('read', ['get', 'find']);
 Ability.addAlias('delete', 'remove');
+
 function subjectName(subject) {
   if (!subject || typeof subject === 'string') {
     return subject;
@@ -18,15 +30,16 @@ function subjectName(subject) {
 
 function defineAbilitiesFor(user, userRoles, publicRoles) {
   const { rules, can } = AbilityBuilder.extract();
-  // Hard coding roles
   
+  // Public Hard coding roles start
   can('create', ['users', 'authManagement']);
-  
+  // Public Hard coding roles end
+
   // Allow this only for the first user
   // eslint-disable-next-line no-console
   console.warn("!!Important!!- disabled this hard coding role after create your first user, can('manage', 'all')");
   can('manage', ['dashboard','roles','user-abilities', 'users']);
-  can('read', 'posts', ['title']);
+  can('read', 'posts', ['title', '_id']);
   can('create', 'posts', ['title', 'body']);
   can('update', 'posts', ['body']);
   // Create your first role 
@@ -191,5 +204,5 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
 
 module.exports = {
   hook: abilities,
-  test: (hook, name, method, userId) => abilities(hook, name, method, true, userId)
+  test: (hook, name, method, userId) => abilities(hook, name, method, true, userId) // Test return results and not throw expecting that block the process
 };

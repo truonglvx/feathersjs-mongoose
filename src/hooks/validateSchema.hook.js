@@ -1,3 +1,13 @@
+/**
+ * validateSchema.hook.js
+ * this hook run from src/app.hooks.js
+ * create: [validateSchema()],
+ * update: [validateSchema()],
+ * patch: [validateSchema()],
+ * We look for getValidators in the app
+ * getValidators is set on model creator by utils/createModelFromJoi.js
+ * We use Joi to validate the schema https://github.com/hapijs/joi
+ */
 const { NotAcceptable } = require('@feathersjs/errors');
        
 module.exports = function validateSchema() {

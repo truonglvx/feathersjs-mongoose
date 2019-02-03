@@ -24,9 +24,19 @@ const pickFromArr = function toObject(arr = [], fields) {
 const getJsonSchemaWithAbilityFields = function(request, schema){
   if(request.params.abilityFields && request.params.abilityFields.length){
     let _schema = cloneDeep(schema);
+    const abilityFields = [];
+    request.params.abilityFields.forEach(fieldName => {
+      if(!fieldName.includes('.')){
+        abilityFields.push(fieldName);
+      }else{ // for deep fields we need to add properties between because the object keys in scheme will be inside properties object 
+        const [objName, keyName] = fieldName.split('.');
+        abilityFields.push(`${objName}.properties.${keyName}`);
+        if(!abilityFields.includes(`${objName}.type`)) abilityFields.push(`${objName}.type`);
+      }
+    });
     const properties = pick(
       _schema.properties,
-      request.params.abilityFields
+      abilityFields
     );
     _schema.properties = properties;
     const required = pickFromArr(_schema.required, request.params.abilityFields);

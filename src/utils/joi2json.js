@@ -291,3 +291,18 @@ module.exports = convert;
  * JSON Schema Object
  * @typedef {object} JSONSchema
  */
+
+
+// const Joi = require('joi');
+
+// const p = convert(
+//   Joi.object(
+//     {
+//   name: Joi.object({
+//     user:  Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'email' }),
+//     roles:  Joi.array().items(Joi.string().meta({ type: 'ObjectId', ref: 'users', displayKey: 'name'})),
+//     blockAll: Joi.boolean()
+//   })
+//   }
+// ))
+// console.log({p: p.properties.name.properties})

@@ -38,7 +38,7 @@ function defineAbilitiesFor(user, userRoles, publicRoles) {
   // Allow this only for the first user
   // eslint-disable-next-line no-console
   console.warn("!!Important!!- disabled this hard coding role after create your first user, can('manage', 'all')");
-  can('manage', ['dashboard','roles','user-abilities', 'users']);
+  can('manage', 'all');
   can('read', 'posts', ['title', '_id']);
   can('create', 'posts', ['title', 'body']);
   can('update', 'posts', ['body']);
@@ -112,10 +112,11 @@ function getRolesByTypes (hook, hasUser, userRolesIds, roles, userId, testMode) 
   }
   return [userRoles, publicRoles, blockedRoles];
 }
+
 const abilities = async function(hook, name, method, testMode, userIdForTest ) {
   try {
-    const action = method || hook.method;
-    const service = name ? hook.app.service(name) : hook.service;
+    const action = method || hook.method; // find
+    const service = name ? hook.app.service(name) : hook.service; // posts
     const model = service.options && service.options.Model && service.options.Model;
     const serviceName = name || hook.path;
     let roles;

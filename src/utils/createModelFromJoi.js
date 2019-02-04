@@ -1,5 +1,6 @@
 
 var timestamps = require('mongoose-timestamp');
+const Joigoose = require('joigoose');
 
 const { accessibleFieldsPlugin } = require('@casl/mongoose');
 
@@ -9,15 +10,14 @@ const { accessibleFieldsPlugin } = require('@casl/mongoose');
  * and also set the getJoi reference to app for future validators check and dashboard service
  */
 module.exports  = function (app, name, getJoi) {
-
+  
   const mongooseClient = app.get('mongooseClient');
-
+  
   const joiSchema = getJoi(false);
-  const Joigoose = require('joigoose')(mongooseClient, { convert: false }, { _id: false, timestamps: true });
-  const mongooseSchema = Joigoose.convert(joiSchema);
-
+  const mongooseSchema = Joigoose(mongooseClient).convert(joiSchema);
+  
   app.set(name + 'getJoi', getJoi); // Set getJoi reference to help us validate user requests
-
+  
   const schema = new mongooseClient.Schema(mongooseSchema, {validateBeforeSave:false}); // validateBeforeSave is off, joi in enough
   schema.plugin(timestamps);
   schema.plugin(accessibleFieldsPlugin); // @casl/mongoose - field permissions - this will help us sanitized data

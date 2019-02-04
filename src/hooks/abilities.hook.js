@@ -38,8 +38,8 @@ function defineAbilitiesFor(user, userRoles, publicRoles) {
   // Allow this only for the first user
   // eslint-disable-next-line no-console
   console.warn("!!Important!!- disabled this hard coding role after create your first user, can('manage', 'all')");
-  can('manage', 'all');
-  can('read', 'posts', ['title']);
+  can('manage', 'dashboard');
+  can('read', 'posts');
   can('create', 'posts', ['title', 'body']);
   can('update', 'posts', ['body']);
   // Create your first role 

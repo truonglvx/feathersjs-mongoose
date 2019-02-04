@@ -20,9 +20,9 @@ class Service {
         const validators = getValidators(true);
         const jsonSchema = joi2json(validators);
         // Add default fields
-        jsonSchema.properties.createdAt = {type: 'date'};
-        jsonSchema.properties.updatedAt = {type: 'date'};
-        jsonSchema.properties._id = {type: 'string'};
+        jsonSchema.properties.createdAt = {type: 'date', 'readOnly': true};
+        jsonSchema.properties.updatedAt = {type: 'date', 'readOnly': true};
+        jsonSchema.properties._id = {type: 'string', 'readOnly': true};
         if(jsonSchema){
           result.schema =  jsonSchema;
         }else{

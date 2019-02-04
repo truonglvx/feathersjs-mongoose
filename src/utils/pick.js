@@ -57,16 +57,19 @@ const getFieldProperties = function(field){
  * @function pick
  * @param {object} data Pass nested object {}
  * @param {array} fields ['_id',{'user': {userId: 'aav'}}]
+ * @private {array} defaultFields fields to include always ['_id']
  * console.log(pick(testObject, ['id', 'user.name', 'comments.body'])); // Get only specific field
  *  console.log(pick(testObject, ['-user.name'])); // Get all values except user.name
  */
-const pick = function(_data, _fields){
+module.exports = function(_data, _fields, defaultFields = ['_id', 'updatedAt', 'createdAt']){
   const data = cloneDeep(_data);
   let values = {};
   let isFieldsNegative = false;
   
   
   /**
+   * Convert fields array to array of fields object with more info
+   * 
    * convert _fields from ['price'] to [{name:'price', isNegative: true, isDeep: false, conditions: null}]
    * {name: String, isNegative: Boolean, conditions: Object, isDeep: Boolean}
    */
@@ -78,6 +81,11 @@ const pick = function(_data, _fields){
     return fieldProperties;
   });
 
+  /**
+   * Handle negative fields
+   * Return all fields except...
+   * 
+   */
   if(isFieldsNegative){ // When one of the fields start with '-'
     values = data;
     fields.forEach(({isNegative, name, conditions}) => {
@@ -90,62 +98,68 @@ const pick = function(_data, _fields){
       }
     });
     return values;
-  }
-  
-
-  fields.forEach(({name, conditions, isDeep}) => {
-    
-    if(conditions && !can(data, conditions)){ // if can return false the skip this field
-      return;
-    }
-    const fieldKey = name;
-    if(isDeep){ // 'product.price'
-      const splitFieldKey = fieldKey.split('.');
-      const [objectKey, insideFieldsKey] = splitFieldKey;
-      const value = data[objectKey];
-      const valueType = typeof value;
-      if(value && valueType === 'object'){ // key: 'product.price' and value is {price, name} or [{price,name}]
-        if(Array.isArray(value)){ // key: 'product.price' and value is [{price,name}]
-          var fieldDeep =  fieldKey.split('.');
-          fieldDeep.shift();
-          fieldDeep = fieldDeep.join('.');
-          value.forEach((item, index) => { // return all [{price}]
-            if(!values[objectKey]) values[objectKey] = [];
-            const fieldValue = validate.getDeepObjectValue(item, fieldDeep);
-            if(!values[objectKey][index]) values[objectKey][index] = {};
-            if(fieldValue !== undefined){
-              Object.assign(values[objectKey][index], {[insideFieldsKey]: fieldValue});
+  }else{
+  /**
+   * Handle positive fields
+   * 
+   */ 
+    const addFieldToValues = function({name, conditions, isDeep}, addDeepDefaults){
+      {
+        if(conditions && !can(data, conditions)){ // if can return false the skip this field
+          return;
+        }
+        const fieldKey = name;
+        if(isDeep){ // 'product.price'
+          const splitFieldKey = fieldKey.split('.');
+          const [objectKey, insideFieldsKey] = splitFieldKey;
+          const value = data[objectKey];
+          const valueType = typeof value;
+          if(value && valueType === 'object'){ // key: 'product.price' and value is {price, name} or [{price,name}]
+            if(Array.isArray(value)){ // key: 'product.price' and value is [{price,name}]
+              var fieldDeep =  fieldKey.split('.');
+              fieldDeep.shift();
+              fieldDeep = fieldDeep.join('.');
+              value.forEach((item, index) => { // return all [{price}]
+                if(!values[objectKey]) values[objectKey] = [];
+                const fieldValue = validate.getDeepObjectValue(item, fieldDeep);
+                if(!values[objectKey][index]) values[objectKey][index] = {};
+                if(fieldValue !== undefined){
+                  Object.assign(values[objectKey][index], {[insideFieldsKey]: fieldValue});
+                }
+              });
+            }else{
+              const fieldValue = validate.getDeepObjectValue(data, fieldKey); // return {price}
+              const objectToSign = {[insideFieldsKey]: fieldValue};
+              if(splitFieldKey.length === 3){
+                if(fieldValue !== undefined){
+                  const secondeObjKey = splitFieldKey[1];
+                  if(!values[objectKey]) values[objectKey] = {secondeObjKey: {}};
+                  if(!values[objectKey][secondeObjKey]) values[objectKey][secondeObjKey] = {};
+                  values[objectKey][secondeObjKey][splitFieldKey[2]] =  fieldValue;
+                }
+              }else{
+                values[objectKey] = Object.assign(values[objectKey] || {}, objectToSign);
+              }
             }
-          });
+          }else{ // key: 'product.price' and value is 'someString'
+            const [objectKey] = fieldKey.split('.');
+            values[objectKey] = data[objectKey]; // return the string
+          }
         }else{
-          const fieldValue = validate.getDeepObjectValue(data, fieldKey); // return {price}
-          const objectToSign = {[insideFieldsKey]: fieldValue};
-          if(splitFieldKey.length === 3){
-            if(fieldValue !== undefined){
-              const secondeObjKey = splitFieldKey[1];
-              if(!values[objectKey]) values[objectKey] = {secondeObjKey: {}};
-              if(!values[objectKey][secondeObjKey]) values[objectKey][secondeObjKey] = {};
-              values[objectKey][secondeObjKey][splitFieldKey[2]] =  fieldValue;
-            }
-          }else{
-            values[objectKey] = Object.assign(values[objectKey] || {}, objectToSign);
+          if(data[fieldKey] !== undefined){
+            values[fieldKey] = data[fieldKey]; // key is 'product', return data.product as is
           }
         }
-      }else{ // key: 'product.price' and value is 'someString'
-        const [objectKey] = fieldKey.split('.');
-        values[objectKey] = data[objectKey]; // return the string
       }
-    }else{
-      if(data[fieldKey] !== undefined){
-        values[fieldKey] = data[fieldKey]; // key is 'product', return data.product as is
-      }
-    }
-  });
+    };
+    defaultFields.forEach((f) => addFieldToValues(getFieldProperties(f)));
+    fields.forEach(({name, conditions, isDeep}) => addFieldToValues({name, conditions, isDeep}, true));
 
-  return values;
+    return values;
+  }
+
+
 };
-
-module.exports = pick;
 
 
 // const comments = [

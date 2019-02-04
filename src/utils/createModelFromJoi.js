@@ -1,6 +1,6 @@
 
-const Mongoose = require('mongoose');
-const Joigoose = require('joigoose')(Mongoose, null, { _id: false, timestamps: true });
+var timestamps = require('mongoose-timestamp');
+
 const { accessibleFieldsPlugin } = require('@casl/mongoose');
 
 /**
@@ -12,15 +12,21 @@ module.exports  = function (app, name, getJoi) {
 
   const mongooseClient = app.get('mongooseClient');
 
-  const joiSchema = getJoi(true);
-
+  const joiSchema = getJoi(false);
+  const Joigoose = require('joigoose')(mongooseClient, { convert: false }, { _id: false, timestamps: true });
   const mongooseSchema = Joigoose.convert(joiSchema);
 
   app.set(name + 'getJoi', getJoi); // Set getJoi reference to help us validate user requests
 
-  const schema = new mongooseClient.Schema(mongooseSchema);
- 
+  const schema = new mongooseClient.Schema(mongooseSchema, {validateBeforeSave:false}); // validateBeforeSave is off, joi in enough
+  schema.plugin(timestamps);
   schema.plugin(accessibleFieldsPlugin); // @casl/mongoose - field permissions - this will help us sanitized data
+  
+  schema.pre('updateMany', function(next) { // missing in mongoose-timestamp
+    const self = this;
+    self._update.updatedAt = new Date;
+    next();
+  });
   
   return mongooseClient.model(name, schema);
 };

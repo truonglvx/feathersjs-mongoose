@@ -118,5 +118,13 @@
     "sid": "AC202e574dc90c8584da7fef8362052f68",
     "token": "541ccc9068f3bcd53cce3d3c5a29287c",
     "number": "+12674158947"
+  },
+  "feathers-mongoose-casl": {
+    "defaultRoles": [
+      {"name": "find me", "actions": ["read"], "type": "public", "subject": ["me"], "condition": { "_id": "{{ user._id }}" } },
+      {"name": "allow sing-up", "actions": ["create"], "type": "public", "subject": ["users"] },
+      {"name": "allow resetPassword, verifyPassword", "actions": ["create"], "type": "public", "subject": ["authManagement"] },
+      {"name": "temporary, for first user", "actions": ["manage"], "subject": ["roles","dashboard","user-abilities"]}
+    ]
   }
 }

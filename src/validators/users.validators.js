@@ -22,6 +22,6 @@ const getJoiObject = function(withRequired){
 
 module.exports = getJoiObject;
 
-// const joi2json = require('../utils/joi2json');
+// const joi2json = require('../../feathers-mongoose-casl/joi2json');
 
 // console.log(joi2json(Joi.object(getJoiObject(true))).properties.roles.items.meta)

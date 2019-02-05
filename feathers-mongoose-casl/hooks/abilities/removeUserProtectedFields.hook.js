@@ -18,7 +18,7 @@
  */
 
 
-const pick = require('../utils/pick');
+const pick = require('../../utils/pick');
 
 module.exports = function removeUserProtectedFields() {
   return async function(hook) {

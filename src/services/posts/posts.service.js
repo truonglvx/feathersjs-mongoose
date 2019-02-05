@@ -2,7 +2,7 @@
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/posts.model');
 const hooks = require('./posts.hooks');
-const modelToSwagger = require('../../utils/swagger.util');
+const {modelToSwagger} = require('../../../feathers-mongoose-casl');
 
 module.exports = function (app) {
   const Model = createModel(app);

@@ -4,7 +4,7 @@
 // for more of what you can do here.
 
 const postsValidators = require('../validators/posts.validators.js');
-const createModelFromJoi = require('../utils/createModelFromJoi');
+const {createModelFromJoi} = require('../../feathers-mongoose-casl');
 
 module.exports = function (app) {
   return createModelFromJoi(app, 'posts', postsValidators);

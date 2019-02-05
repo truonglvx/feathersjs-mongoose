@@ -14,7 +14,7 @@
     }
   *}
  */
-const pick = require('../utils/pick');
+const pick = require('../../utils/pick');
 
 module.exports = function returnUserOnLogin() {
   return async function(hook) {

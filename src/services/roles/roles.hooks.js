@@ -1,7 +1,7 @@
 
 
 const commonHooks = require('feathers-hooks-common');
-const rolesCache = require('../../hooks/rolesCache.hook.js');
+const {rolesCache} = require('../../../feathers-mongoose-casl');
 
 module.exports = {
   before: {

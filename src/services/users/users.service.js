@@ -3,7 +3,7 @@ const createService = require('feathers-mongoose');
 const createModel = require('../../models/users.model');
 const hooks = require('./users.hooks');
 const errors = require('@feathersjs/errors');
-const modelToSwagger = require('../../utils/swagger.util');
+const {modelToSwagger} = require('../../../feathers-mongoose-casl');
 
 const notFound = new errors.NotFound('User does not exist');
 

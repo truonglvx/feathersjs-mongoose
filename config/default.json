@@ -10,6 +10,7 @@
   },
   "src": "../src/",
   "public": "../public/",
+  "dashboard": "../src/utils/out/",
   "paginate": {
     "default": 10,
     "max": 50
@@ -110,7 +111,7 @@
     "secretAccessKey": "pFJgQAdtFegyjSNv8zBYsDzB1TgkpKLFdrjUYfFE"
   },
   "mailgun": {
-    "apiKey": "key-bb4d6cea2705b605735065eddb8a6d8d",
+    "apiKey": "key-b8f198350c6cad510866285ce72913a5",
     "domain": "info.kanmashvim.co.il"
   },
   "twilio": {

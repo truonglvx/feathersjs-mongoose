@@ -2,7 +2,7 @@
 
 
 const { GeneralError } = require('@feathersjs/errors');
-const {asyncForEach} = require('../../utils/helpers'); 
+const {asyncForEach} = require('../../../feathers-mongoose-casl'); 
 
 class Service {
   constructor (options) {

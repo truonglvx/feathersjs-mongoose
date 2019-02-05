@@ -15,7 +15,7 @@ const { toMongoQuery } = require('@casl/mongoose');
 const { Forbidden, GeneralError } = require('@feathersjs/errors');
 const TYPE_KEY = Symbol.for('type');
 const isEqual = require('lodash.isequal');
-const {compiledRolesTemplate} = require('../utils/helpers');
+const {compiledRolesTemplate} = require('../../utils/helpers');
 
 Ability.addAlias('update', 'patch');
 Ability.addAlias('read', ['get', 'find']);
@@ -122,8 +122,9 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
     let roles;
     const rolesResults = await hook.app.service('/roles').find({
       query: {
-        active: true
-      }
+        active: true,
+      },
+      disabledCache: true
     });
     if(rolesResults && rolesResults.data){
       roles = rolesResults.data;

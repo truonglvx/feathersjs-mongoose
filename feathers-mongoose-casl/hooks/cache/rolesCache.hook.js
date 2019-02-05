@@ -25,7 +25,10 @@ module.exports = function handleRolesCache() {
       const method = hook.method;
     
       if(hookType === 'before' && method === 'find'){
-
+        if(hook.params.disabledCache) {
+          hook.app.info('skip roles from cache, return from DB');
+          return hook;
+        }
         const rolesFromCatch = rolesCacheMap.get('find-roles');
         if(rolesFromCatch){
           hook.app.info('return roles from cache');

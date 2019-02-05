@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 const validate = require('validate.js');
-const joi2json = require('../../utils/joi2json');
+const {joi2json} = require('../../../feathers-mongoose-casl');
+
 const { GeneralError } = require('@feathersjs/errors');
 
 class Service {

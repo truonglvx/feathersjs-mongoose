@@ -9,7 +9,8 @@ const GithubStrategy = require('passport-github');
 // const verifyHooks = require('feathers-authentication-management').hooks;
 const verifyHooks = require('feathers-authentication-management').hooks;
 const { debug } = require('feathers-hooks-common');
-const returnUserOnLogin = require('./hooks/returnUserOnLogin.hook.js');
+const {returnUserOnLogin} = require('../feathers-mongoose-casl');
+
 module.exports = function (app) {
   const config = app.get('authentication');
   const applyIsVerifiedEmail = app.get('verifyEmail').enabled;

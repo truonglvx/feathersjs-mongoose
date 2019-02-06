@@ -3,7 +3,7 @@ const {services} = require('../../feathers-mongoose-casl');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
-  // Feathers mongoose common services
+  // feathers-mongoose-casl services
   app.configure(services.users);
   app.configure(services.authManagement);
   app.configure(services.dashboard);
@@ -13,8 +13,8 @@ module.exports = function (app) {
   app.configure(services.sms);
   app.configure(services.roles);
   app.configure(services.mailer);
+  app.configure(services.userAbilities);
   // Specific project services
   app.configure(posts);
-  app.configure(services.userAbilities);
 
 };

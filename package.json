@@ -81,7 +81,7 @@
     "sift": "^7.0.1",
     "twilio": "^3.27.1",
     "validate.js": "^0.12.0",
-    "winston": "^3.1.0"
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^5.9.0",

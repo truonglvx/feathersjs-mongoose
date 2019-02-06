@@ -1,7 +1,8 @@
 
 
 
-const {abilities, pick} = require('../../index');
+const abilities = require('../../hooks/abilities/abilities.hook')
+const pick = require('../../utils/pick');
 const cloneDeep = require('lodash.clonedeep');
 
 const isPassAbilityCheck = function (request){

@@ -9,7 +9,7 @@ const GithubStrategy = require('passport-github');
 // const verifyHooks = require('feathers-authentication-management').hooks;
 const verifyHooks = require('feathers-authentication-management').hooks;
 const { debug } = require('feathers-hooks-common');
-const {returnUserOnLogin} = require('../feathers-mongoose-casl');
+const returnUserOnLogin = require('./hooks/authenticate/returnUserOnLogin.hook');
 
 module.exports = function (app) {
   const config = app.get('authentication');

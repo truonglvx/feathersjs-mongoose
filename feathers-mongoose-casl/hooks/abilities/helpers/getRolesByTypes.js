@@ -30,7 +30,7 @@ function getRolesByTypes (hook, hasUser, userRolesIds, roles, userId, testMode) 
           }
         }
       }else if(role.type === 'public'){
-        publicRoles.push(publicRoles);
+        publicRoles.push(role);
       }
     });
   }

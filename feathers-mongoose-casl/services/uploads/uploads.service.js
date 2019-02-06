@@ -4,7 +4,6 @@ const multer = require('multer');
 const multipartMiddleware = multer();
 const BlobService = require('feathers-blob');
 const fs = require('fs-blob-store');
-const blobStorage = fs(__dirname + '/../../../public/uploads');
 const AWS = require('aws-sdk');
 const Store = require('s3-blob-store');
 
@@ -22,6 +21,7 @@ module.exports = function (app) {
     bucket: app.get('s3').bucket
   });
   
+  const blobStorage = fs(app.get('public')+'/uploads');
   app.use('/uploads',
     multipartMiddleware.single('file'),
     function(req,res,next){

@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 // Initializes the `roles` service on path `/roles`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/roles.model');
+const createModel = require('./roles.model');
 const hooks = require('./roles.hooks');
 
 module.exports = function (app) {
@@ -12,7 +12,8 @@ module.exports = function (app) {
     paginate: {
       "default": rolesCacheConfig['local-config'].max,
       "max": rolesCacheConfig['local-config'].max
-    }
+    },
+    whitelist: [ '$exists' ]
   };
 
   // Initialize our service with any options it requires

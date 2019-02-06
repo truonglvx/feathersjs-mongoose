@@ -19,6 +19,7 @@
 
 
 const pick = require('../../utils/pick');
+const enums = require('../../enums');
 
 module.exports = function removeUserProtectedFields() {
   return async function(hook) {
@@ -27,7 +28,7 @@ module.exports = function removeUserProtectedFields() {
     const method = hook.method;
 
 
-    const USER_PROTECTED_FIELDS = [...hook.app.get('enums').USER_PROTECTED_FIELDS.map(field => `-${field}`)];
+    const USER_PROTECTED_FIELDS = [...enums.USER_PROTECTED_FIELDS.map(field => `-${field}`)];
 
     if(hookType === 'before' && ['create', 'update', 'patch'].includes(method)){
       if(method === 'create'){

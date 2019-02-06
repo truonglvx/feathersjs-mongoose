@@ -22,6 +22,8 @@ const { Forbidden, GeneralError } = require('@feathersjs/errors');
 const TYPE_KEY = Symbol.for('type');
 const getRolesByTypes = require('./helpers/getRolesByTypes');
 const defineAbilities = require('./helpers/defineAbilities');
+const getUser = require('./helpers/getUser');
+const getRoles = require('./helpers/getRoles');
 
 Ability.addAlias('update', 'patch');
 Ability.addAlias('read', ['get', 'find']);
@@ -34,85 +36,57 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
     const model = service.options && service.options.Model && service.options.Model;
     const serviceName = name || hook.path;
     
-    /* 
-    * Find roles
-    *  find roles from cache or from db
-    *  ---------------------
-    */
-    let roles;
-    const rolesResults = await hook.app.service('/roles').find({
-      query: {
-        active: true,
-      },
-      disabledCache: true
-    });
-    if(rolesResults && rolesResults.data){
-      roles = rolesResults.data;
-    }else{
-      hook.app.error('Missing roles from DB', rolesResults);
-    }
 
-    /* Default roles
-    *  Get default roles from config
-    *  ---------------------
-    */
-    const mongooseCaslConfig = hook.app.get('feathers-mongoose-casl') || {};
-    if(!mongooseCaslConfig){
-      hook.app.error('Missing feathers-mongoose-casl in config file');
-    }
-    const defaultRoles = mongooseCaslConfig.defaultRoles || [];
+    // --------- Find user ------------
+    // find user from cache or from db
+    const {user, hasUser, userId, userRolesIds} = await getUser({hook, testMode,userIdForTest});
+    // --------------------------------
 
-    /* Find user
-    *  find user from cache or from db
-    *  ---------------------
-    */
-    let user = hook.params.user;
-    if(testMode && userIdForTest){
-      user = await hook.app.service('/users').get(userIdForTest);
-      if(!user){
-        throw new GeneralError(`User Not Found`);
-      }
-    }
-    const hasUser = user && user._id;
-    const userId = hasUser && user._id;
-    const userRolesIds = hasUser ? (user.roles || []) : [];
 
-    /* filter and group the roles by type
-    *  filters un valid roles (active:false, or from/to date fail)
-    *  ---------------------
-    */
+    // --------- Find Roles ------------
+    // find roles from cache or from db
+    const {roles, defaultRoles} = await getRoles({hook, testMode,userIdForTest});
+    // --------------------------------
+
+
+    // --------- Create filter groups and remove invalid ones ------------
+    // split roles to publicRoles and userRoles, remove all active:false or by from&to that not include today
     const [userRoles, publicRoles] = getRolesByTypes(hook, hasUser, userRolesIds, roles, userId, testMode);
+    // --------------------------------
 
-    /* defineAbilities
-    *  compiledRolesTemplate with user data and define Abilities
-    *  ---------------------
-    */
+
+    // --------- Define Abilities ------------
+    // compiledRolesTemplate with user data:
+    // from [{action: ['read', "conditions": {  "author": "{{ user._id }}" } ]}]
+    // to   [{action: ['read', "conditions": {  "author": "a343dd9" } ]}]
     const ability = defineAbilities(user, userRoles, publicRoles, defaultRoles);
+    // --------------------------------
+
+
+    // --------- Create Test ability function ------------
+    // this function will call and throw an error that block user with missing ability to is a request
     const id = hook.id ? hook.id : '';
-    
-    /* Create Test ability function
-    *  ---------------------
-    */
     const throwUnlessCan = (action, resource) => {
       if (ability.cannot(action, resource)) {
         throw new Forbidden(`You are not allowed to ${action} ${id} ${serviceName}`);
       }
     };
+    // --------------------------------
 
-    /* accessibleFieldsBy
-    *  We set accessibleFieldsBy from model and use it inside feathers-mongoose-casl/hooks/sanitizedData.hook.js 
-    *  ---------------------
-    */
+  
+    // --------- Accessible Fields By ------------
+    // we want to expose this into params to let sanitizedData.hook the right info to filter fields from the request or from the response
     hook.params.ability = ability;
     if(model && model.accessibleFieldsBy){
       hook.params.abilityFields = model.accessibleFieldsBy(ability, action);
     }
+    // --------------------------------
 
-    /* Test mode
-    *  test mode is owr way to run abilities service without blocking the process
-    *  this help us to serve user-abilities service, service that return info about the user abilities
-    *  ---------------------
-    */
+
+    // --------- Test mode ------------
+    // when test mode is true we catch the error from the ability function, throwUnlessCan()
+    // because this is not a real request is only a check ability and we want only to check ability
+    // we used this option from the user-abilities service
     if(testMode) {
       if(!hook.data) hook.data = {};
       hook.data[TYPE_KEY] = serviceName;
@@ -126,21 +100,21 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
       }
       return hook;
     }
+    // --------------------------------
 
 
-    /* Check CREATE abilities
-    *  ---------------------
-    */
 
+    // --------- CREATE request ------------
+    // check ability for create request
     if (hook.method === 'create') {
       hook.data[TYPE_KEY] = serviceName;
       throwUnlessCan('create', hook.data);
     }
+    // --------------------------------
 
-    /* Build query
-    *  build query with filters before get&find
-    *  ---------------------
-    */
+    // --------- READ/UPDATE/DELETE request ------------
+    // read- build query that will filter the relevant data by user ability
+    // update/delete - build query that will let user to change/remove by is ability
     if (!hook.id) {
       const query = toMongoQuery(ability, serviceName, action);
 
@@ -152,10 +126,11 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
 
       return hook;
     }
+    // --------------------------------
 
-    /* Check GET abilities
-    *  ---------------------
-    */
+
+    // --------- GET request ------------
+    // check ability for get request
     const params = Object.assign({}, hook.params, { provider: null });
     const result = await service.get(hook.id, params);
 
@@ -171,6 +146,7 @@ const abilities = async function(hook, name, method, testMode, userIdForTest ) {
     hook.app.error('abilities check', error);
     throw new Forbidden(error);
   }
+  // --------------------------------
 };
 
 module.exports = {

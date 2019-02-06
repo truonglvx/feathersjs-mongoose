@@ -17,7 +17,11 @@ const {
 const joi2json = require('./utils/joi2json');
 const pick = require('./utils/pick');
 const modelToSwagger = require('./utils/modelToSwagger.util');
-
+const userAbilities = require('./services/user-abilities/user-abilities.service');
+const authmanagement = require('./services/authmanagement/authmanagement.service');
+const accountService = require('./services/authmanagement/notifier');
+const dashboard = require('./services/dashboard/dashboard.service');
+const users = require('./services/users/users.service');
 
 module.exports = {
   createModelFromJoi,
@@ -35,5 +39,10 @@ module.exports = {
   abilities,
   removeUserProtectedFields,
   returnUserOnLogin,
-  validateSchema
+  validateSchema,
+  userAbilities,
+  authmanagement,
+  accountService,
+  dashboard,
+  users
 };

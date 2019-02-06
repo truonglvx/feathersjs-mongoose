@@ -1,9 +1,9 @@
 // Initializes the `users` service on path `/users`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/users.model');
+const createModel = require('./uses.model');
 const hooks = require('./users.hooks');
 const errors = require('@feathersjs/errors');
-const {modelToSwagger} = require('../../../feathers-mongoose-casl');
+const modelToSwagger = require('../../utils/modelToSwagger.util');
 
 const notFound = new errors.NotFound('User does not exist');
 

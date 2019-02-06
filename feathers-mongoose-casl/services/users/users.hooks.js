@@ -1,8 +1,9 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const verifyHooks = require('feathers-authentication-management').hooks;
-const accountService = require('../authmanagement/notifier');
 const commonHooks = require('feathers-hooks-common');
-const {usersCache, removeUserProtectedFields} = require('../../../feathers-mongoose-casl');
+const {accountService} = require('../../index');
+const removeUserProtectedFields = require('../../hooks/abilities/removeUserProtectedFields.hook')
+const usersCache = require('../../hooks/cache/usersCache.hook');
 
 const {
   hashPassword, protect

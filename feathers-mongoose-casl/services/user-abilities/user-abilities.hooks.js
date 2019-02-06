@@ -1,7 +1,7 @@
 
 
 
-const {abilities, pick} = require('../../../feathers-mongoose-casl');
+const {abilities, pick} = require('../../index');
 const cloneDeep = require('lodash.clonedeep');
 
 const isPassAbilityCheck = function (request){
